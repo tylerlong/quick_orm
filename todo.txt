@@ -1,0 +1,16 @@
+9. multiple inheritance
+
+10. full text search. (class decorator for model?)
+
+12. fomal docs, including a comprehensive example
+
+14. add more field types
+    file: store files into database, automatically compress and converted to base64
+    object: store simple python objects, such as dict, tuple, list ...etc. stored as json (there is a pickle type from sqlalchemy)
+    (sqlalchemy provides a base class for deriving new types, and there is also a typedecorator which enables you modify existing types)
+
+15. db.session.query(User) ==> User.query(db)
+
+17. study from flask-sqlalchemy, or other orm framework
+
+19. 
