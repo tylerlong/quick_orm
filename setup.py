@@ -10,19 +10,31 @@ def read_examples():
             open('quick_orm/examples/{0}.py'.format(example_file)).read())
     return result.rstrip()
 
-long_description = open('README').read().replace('{{ examples }}', read_examples())
+readme = requirements = None
+with open('README_template', 'r') as file:
+    readme = file.read()
+readme = readme.replace('{{ examples }}', read_examples())
+with open('requirements.txt', 'r') as file:
+    text = file.read().rstrip()
+    readme = readme.replace('{{ requirements }}', text)
+    requirements = text.splitlines()
+with open('quick_orm/core.py', 'r') as file:
+    readme = readme.replace('{{ lines_count }}', str(len(file.read().splitlines())))
+with open('README', 'w') as file:
+    file.write(readme)
+
 
 setup(
     name = quick_orm.__name__,
     version = quick_orm.__version__,
-    url = 'http://stackoverflow.com/users/862862/tyler-long',
+    url = 'https://github.com/tylerlong/quick_orm',
     license = 'BSD',
     author = quick_orm.__author__,
     author_email = 'tyler4long@gmail.com',
     description = """A python orm which enables you to get started in less than a minute! Super easy to setup and super easy to use, yet super powerful! You would regret that you didn't discorver it earlier!""",
-    long_description = long_description,
+    long_description = readme,
     packages = ['quick_orm', 'quick_orm.examples', ],
-    install_requires = open('requirements.txt').read().splitlines(),
+    install_requires = requirements,
     platforms = 'any',
     classifiers = [
         'Development Status :: 4 - Beta',
