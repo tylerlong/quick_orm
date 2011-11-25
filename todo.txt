@@ -4,11 +4,6 @@
 
 12. fomal docs, including a comprehensive example
 
-14. add more field types
-    JsonType: store simple python objects, such as dict, tuple, list as json.
-    There is a PickleType from sqlalchemy, but it stores contents as python pickle which can not be read by other languages.
-    (sqlalchemy provides a base class for deriving new types, and there is also a typedecorator which enables you modify existing types)
-
 15. db.session.query(User) ==> User.query(db)
 
 17. study from flask-sqlalchemy, or other orm framework
@@ -23,6 +18,6 @@
 
     equivalent to  "avatar = Column(LargeBinary, default = default_avatar)"
     but the default value isn't saved to database, preferred.
-    there should be a convenient way to do this.
+    there should be a convenient way to do this. (preferrablly by one line of code)
 
-20. set sys.path for tests.py to let it run without installation of quick_orm
+21. 
