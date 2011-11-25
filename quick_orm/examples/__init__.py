@@ -27,5 +27,5 @@ examples_dict = {
     'raw_sql': 'Performing raw sql query',
     'multiple_databases': 'Multiple databases',
     'table_inheritance': 'Table inheritance',
-    'meta_builder': 'MetaBuilder to avoid dupliate code',
+    'meta_builder': 'MetaBuilder to avoid duplicate code',
 }

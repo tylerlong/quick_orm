@@ -382,8 +382,8 @@ if __name__ == '__main__':
 
 
 
-MetaBuilder to avoid dupliate code example
-******************************************
+MetaBuilder to avoid duplicate code example
+*******************************************
 from quick_orm.core import Database
 from sqlalchemy import Column, String, DateTime, func
 
