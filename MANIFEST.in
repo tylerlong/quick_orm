@@ -1,1 +1,1 @@
-include CHANGES LICENSE README requirements.txt tests.py
+include CHANGES LICENSE README_template README requirements.txt tests.py

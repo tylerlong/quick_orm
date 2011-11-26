@@ -4,9 +4,9 @@
 
 12. fomal docs, including a comprehensive example
 
-15. db.session.query(User) ==> User.query(db)
+15. db.session.query(User) ==> User.query(db) (Is it neccessary?)
 
-17. study from flask-sqlalchemy, or other orm framework
+17. study from flask-sqlalchemy, and other orm frameworks
 
 19. _avatar = Column('avatar', LargeBinary)
     def get_avatar(self):
