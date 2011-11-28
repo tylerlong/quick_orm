@@ -4,13 +4,12 @@
     ~~~~~~~~~~~~~~
     Core of Quick ORM
 """
-import inspect
-from types import MethodType
 from toolkit_library.string_util import StringUtil
 from sqlalchemy import create_engine, Column, Integer, ForeignKey, String
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship, backref
 from sqlalchemy.schema import Table
 from sqlalchemy.ext.declarative import declarative_base, declared_attr, DeclarativeMeta
+from extensions import DatabaseExtension, SessionExtension
 
 
 def model_name_to_table_name(model_name):
@@ -18,6 +17,7 @@ def model_name_to_table_name(model_name):
     return StringUtil.camelcase_to_underscore(model_name)
 
 
+@DatabaseExtension.extend # extend Database to add some useful methods
 class Database(object):
     """Represent a connection to a specific database"""
 
@@ -37,43 +37,9 @@ Please specify something like '?charset=utf8' explicitly.""")
 
         # If you want to deal with orm, you need session 
         self.session = scoped_session(sessionmaker(autocommit = False, autoflush = False, bind = self.engine))
-
-        def add_then_commit(session, obj):
-            session.add(obj)
-            session.commit()        
-        self.session.add_then_commit = MethodType(add_then_commit, self.session)
-
-        def add_all_then_commit(session, items):
-            session.add_all(items)
-            session.commit()        
-        self.session.add_all_then_commit = MethodType(add_all_then_commit, self.session)
-
-    
-    def create_tables(self):
-        """Create all tables"""
-        Database.BaseModel.metadata.create_all(bind = self.engine)
-
-   
-    def drop_tables(self):
-        """Drop all tables"""
-        Database.BaseModel.metadata.drop_all(bind = self.engine)
-
-    
-    def load_data(self, data):
-        """Load data into database from a module or an iterable of items 
-        All items must be derived from Database.BaseModel, otherwise will be ignored.
-        If the data paramter is a module, will try to load data from variables ending with 's' in that module.
-        """
-        if not data:
-            raise ValueError('data parameter should not be None or empty')
-        #Iterable of items
-        if hasattr(data, '__iter__') and all(isinstance(item, Database.BaseModel) for item in data):
-            self.session.add_all(data)
-            self.session.commit()
-        #Module
-        elif inspect.ismodule(data):
-            for items in (getattr(data, attr) for attr in dir(data) if attr.endswith('s')):
-                self.load_data(items)
+        
+        # extend session to add some shortcut methods
+        self.session = SessionExtension.extend(self.session)        
 
 
     @staticmethod
@@ -113,6 +79,9 @@ Please specify something like '?charset=utf8' explicitly.""")
         """Add a one-to-one relationship between two models.
         This method is a shortcut to the method Database.foreign_key(ref_model, ref_name, backref_name, True)
         """
+        import warnings
+        warnings.warn("one_to_one is deprecated, will be removed in version 0.3. Please use foreign_key(one_to_one = True) instead.", DeprecationWarning)
+
         return Database.foreign_key(ref_model, ref_name, backref_name, True)
 
 

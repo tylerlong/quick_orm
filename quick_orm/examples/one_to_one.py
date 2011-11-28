@@ -5,7 +5,7 @@ class User(object):
     __metaclass__ = Database.DefaultMeta
     name = Column(String(30))
 
-@Database.one_to_one(User)
+@Database.foreign_key(User, one_to_one = True)
 class Contact(object):
     __metaclass__ = Database.DefaultMeta
     email = Column(String(70))
