@@ -100,6 +100,7 @@ Please specify something like '?charset=utf8' explicitly.""")
             # reference: http://docs.python.org/tutorial/classes.html#python-scopes-and-namespaces
             my_backref_name = backref_name or (table_name if one_to_one else '{0}s'.format(table_name))
             backref_options = dict(uselist = False) if one_to_one else dict(lazy = 'dynamic')
+            backref_options['cascade'] = 'all'
             setattr(cls, ref_name, relationship(ref_model_name, 
                 primaryjoin = '{0}.{1} == {2}.id'.format(model_name, foreign_key, ref_model_name), 
                 backref = backref(my_backref_name, **backref_options), remote_side = '{0}.id'.format(ref_model_name)))
