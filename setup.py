@@ -31,7 +31,7 @@ setup(
     license = 'BSD',
     author = quick_orm.__author__,
     author_email = 'tyler4long@gmail.com',
-    description = """A python orm which enables you to get started in less than a minute! Super easy to setup and super easy to use, yet super powerful! You would regret that you didn't discorver it earlier!""",
+    description = 'A python ORM, quick, easy, simple yet powerful, based on sqlalchemy.',
     long_description = readme,
     packages = ['quick_orm', 'quick_orm.examples', ],
     install_requires = requirements,

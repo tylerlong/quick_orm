@@ -20,4 +20,8 @@
     but the default value isn't saved to database, preferred.
     there should be a convenient way to do this. (preferrablly by one line of code)
 
-21. 
+21. README.rst is not well formatted on github, especially the source code
+
+22. many_to_many cascade review
+
+23. 
