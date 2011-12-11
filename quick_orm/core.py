@@ -75,17 +75,6 @@ Please specify something like '?charset=utf8' explicitly.""")
 
 
     @staticmethod
-    def one_to_one(ref_model, ref_name = None, backref_name = None):
-        """Add a one-to-one relationship between two models.
-        This method is a shortcut to the method Database.foreign_key(ref_model, ref_name, backref_name, True)
-        """
-        import warnings
-        warnings.warn("one_to_one is deprecated, will be removed in version 0.3. Please use foreign_key(one_to_one = True) instead.", DeprecationWarning)
-
-        return Database.foreign_key(ref_model, ref_name, backref_name, True)
-
-
-    @staticmethod
     def many_to_many(ref_model, ref_name = None, backref_name = None, middle_table_name = None):
         """Class Decorator, add a many-to-many relationship between two SQLAlchemy models.
         Parameters:
@@ -116,6 +105,15 @@ Please specify something like '?charset=utf8' explicitly.""")
                 Column(left_column_name, Integer, ForeignKey('{0}.id'.format(table_name)), primary_key = True),
                 Column(right_column_name, Integer, ForeignKey('{0}.id'.format(ref_table_name)), primary_key = True),
             )
+
+            middle_model = type(my_middle_table_name, (Database.BaseModel,), dict(__table__ = middle_table))
+            setattr(middle_model, 'left', relationship(cls.__name__, 
+                primaryjoin = '{0}.{1} == {2}.id'.format(middle_model.__name__, left_column_name, cls.__name__),
+                backref = backref(my_middle_table_name + 'left', cascade = 'all')))
+            setattr(middle_model, 'right', relationship(ref_model_name,
+                primaryjoin = '{0}.{1} == {2}.id'.format(middle_model.__name__, right_column_name, ref_model_name), 
+                backref = backref(my_middle_table_name + 'right', cascade = 'all')))
+            #todo: is the code block above necessary? maybe just middle_table is enough. what we want is only cascade = 'all'
 
             my_backref_name = backref_name or '{0}s'.format(table_name)
             parameters = dict(secondary = middle_table, lazy = 'dynamic', backref = backref(my_backref_name, lazy = 'dynamic'))

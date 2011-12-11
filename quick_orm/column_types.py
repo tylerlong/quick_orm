@@ -10,6 +10,8 @@ from sqlalchemy.types import TypeDecorator, String
 class JsonType(TypeDecorator):
     '''Dumps simple python data structures to json format and stores them as string
     Convert the data back to original python data structures when read.
+    Differences from sqlalchemy PickleType: PickleType only supports python, JsonType supports a lot of languages
+        Think that you might want to read the data out of database using Java or PHP(or C#...etc).
     '''
 
     impl = String

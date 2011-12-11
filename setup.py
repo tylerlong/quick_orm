@@ -14,13 +14,13 @@ readme = requirements = None
 with open('README_template', 'r') as file:
     readme = file.read()
 readme = readme.replace('{{ examples }}', read_examples())
-with open('requirements.txt', 'r') as file:
+with open('requires.txt', 'r') as file:
     text = file.read().rstrip()
-    readme = readme.replace('{{ requirements }}', text)
+    readme = readme.replace('{{ requires }}', text)
     requirements = text.splitlines()
 with open('quick_orm/core.py', 'r') as file:
     readme = readme.replace('{{ lines_count }}', str(len(file.read().splitlines())))
-with open('README', 'w') as file:
+with open('README.rst', 'w') as file:
     file.write(readme)
 
 

@@ -1,3 +1,8 @@
+=========
+Quick ORM
+=========
+
+
 Introduction
 ************
 A python ORM which enables you to get started in less than a minute! 
@@ -24,7 +29,7 @@ Features
 Prerequisites 
 *************
 You need Python 2.6 or above. I haven't test it against Python 3+. I will do it soon.
-{{ requirements }}
+{{ requires }}
 If you are using pip to manage python packages, you don't have to install the prerequisites separately, they will be installed automatically.
        
 
