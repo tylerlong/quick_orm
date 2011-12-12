@@ -2,6 +2,7 @@
 Quick ORM
 =========
 
+***Warning***: NOT compatible with SQLAlchemy 0.7.4. I am going to solve the problem. In the mean time, please use SQLAlchemy 0.7.3.
 
 Introduction
 ************
