@@ -6,6 +6,7 @@
 """
 import sys, subprocess
 from toolkit_library.inspector import ModuleInspector, PackageInspector
+from toolkit_library.input_util import InputUtil
 from quick_orm import examples
 
 def run_examples():
@@ -23,7 +24,8 @@ def run_examples():
 def run_tests():
     """Run unit tests"""
     from quick_orm.testsuite import run_testsuite
-    run_testsuite()
+    db_name = InputUtil.get_input('database', default = 'sqlite', pattern = '(?:mysql|sqlite|postgresql)')
+    run_testsuite(db_name)
 
 
 if __name__ == '__main__':

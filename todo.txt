@@ -24,4 +24,8 @@
 
 22. many_to_many cascade review
 
-23. 
+23. table inheritance broken in sqlalchemy 0.7.4
+
+24. unit test should be run against mysql, sqlite and postgresql, not only sqlite. mysql and postgresql are both popular open source databases, they should not be neglected
+
+25

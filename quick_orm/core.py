@@ -106,15 +106,6 @@ Please specify something like '?charset=utf8' explicitly.""")
                 Column(right_column_name, Integer, ForeignKey('{0}.id'.format(ref_table_name)), primary_key = True),
             )
 
-            middle_model = type(my_middle_table_name, (Database.BaseModel,), dict(__table__ = middle_table))
-            setattr(middle_model, 'left', relationship(cls.__name__, 
-                primaryjoin = '{0}.{1} == {2}.id'.format(middle_model.__name__, left_column_name, cls.__name__),
-                backref = backref(my_middle_table_name + 'left', cascade = 'all')))
-            setattr(middle_model, 'right', relationship(ref_model_name,
-                primaryjoin = '{0}.{1} == {2}.id'.format(middle_model.__name__, right_column_name, ref_model_name), 
-                backref = backref(my_middle_table_name + 'right', cascade = 'all')))
-            #todo: is the code block above necessary? maybe just middle_table is enough. what we want is only cascade = 'all'
-
             my_backref_name = backref_name or '{0}s'.format(table_name)
             parameters = dict(secondary = middle_table, lazy = 'dynamic', backref = backref(my_backref_name, lazy = 'dynamic'))
             if table_name == ref_table_name:             
