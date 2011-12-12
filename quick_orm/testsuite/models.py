@@ -30,3 +30,19 @@ class BlogEntry(object):
     __metaclass__ = metaclass
     title = Column(String(64), nullable = False)
     content = Column(Text)
+
+
+class Topic(object):
+    __metaclass__ = metaclass
+    name = Column(String(64), nullable = False)
+
+
+@Database.foreign_key(User)
+class Post(object):
+    __metaclass__ = metaclass
+    content = Column(Text)
+
+
+@Database.many_to_many(Topic)
+class Question(Post):
+    title = Column(String(64), nullable = False)

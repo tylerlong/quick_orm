@@ -61,7 +61,7 @@ Please specify something like '?charset=utf8' explicitly.""")
         def ref_table(cls):
             model_name = cls.__name__
             table_name = model_name_to_table_name(model_name)
-            setattr(cls, foreign_key, Column(Integer, ForeignKey('{0}.id'.format(ref_table_name))))
+            setattr(cls, foreign_key, Column(Integer, ForeignKey('{0}.id'.format(ref_table_name), ondelete = "CASCADE")))
             # Assign to backref_name will change it to a local variable which we don't want to, so we have to create a new variable.
             # reference: http://docs.python.org/tutorial/classes.html#python-scopes-and-namespaces
             my_backref_name = backref_name or (table_name if one_to_one else '{0}s'.format(table_name))
@@ -102,8 +102,8 @@ Please specify something like '?charset=utf8' explicitly.""")
 
             middle_table = Table(
                 my_middle_table_name, Database.BaseModel.metadata,
-                Column(left_column_name, Integer, ForeignKey('{0}.id'.format(table_name)), primary_key = True),
-                Column(right_column_name, Integer, ForeignKey('{0}.id'.format(ref_table_name)), primary_key = True),
+                Column(left_column_name, Integer, ForeignKey('{0}.id'.format(table_name), ondelete = "CASCADE"), primary_key = True),
+                Column(right_column_name, Integer, ForeignKey('{0}.id'.format(ref_table_name), ondelete = "CASCADE"), primary_key = True),
             )
 
             my_backref_name = backref_name or '{0}s'.format(table_name)
@@ -149,7 +149,7 @@ Please specify something like '?charset=utf8' explicitly.""")
                     setattr(foreign_model, model_name_to_table_name(name) + 's', 
                         property(lambda self: getattr(self, model_name_to_table_name(base.__name__) + 's').filter_by(real_type = model_name_to_table_name(name))))
 
-                attrs['id'] = declared_attr(lambda cls: Column(Integer, ForeignKey('{0}.id'.format(model_name_to_table_name(base.__name__))), primary_key = True))
+                attrs['id'] = declared_attr(lambda cls: Column(Integer, ForeignKey('{0}.id'.format(model_name_to_table_name(base.__name__)), ondelete = "CASCADE"), primary_key = True))
                 attrs['__mapper_args__'] = declared_attr(lambda cls: {'polymorphic_identity': model_name_to_table_name(name)})              
 
             return DeclarativeMeta.__new__(cls, name, bases, attrs)

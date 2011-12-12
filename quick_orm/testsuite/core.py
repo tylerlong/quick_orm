@@ -83,3 +83,19 @@ class CoreTestCase(unittest.TestCase):
         assert group_count == group_query.count()
         assert middle_count - user_middle_count == db.engine.execute(middle_query_str).scalar()
 
+    def test_table_inheritance_cascade(self):
+        """Test cascade where there is table inheritance"""
+        question_query = db.session.query(Question)
+        question_count = question_query.count()
+        topic_query = db.session.query(Topic)
+        topic_count = topic_query.count()
+        question = db.session.query(Question).filter_by(title = 'title1').first()
+        assert question
+        assert question.topics.count() > 0
+        topic = question.topics.first()
+        assert topic
+        db.session.delete_then_commit(question)
+        question = question_query.get(question.id)
+        assert not question
+        topic = topic_query.get(topic.id)
+        assert topic

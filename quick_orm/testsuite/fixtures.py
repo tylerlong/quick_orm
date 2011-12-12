@@ -30,3 +30,17 @@ blog_entries.append(BlogEntry(title = 'title5',  content = 'content5',  user = u
 blog_entries.append(BlogEntry(title = 'title6',  content = 'content6',  user = users[3]))
 blog_entries.append(BlogEntry(title = 'title7',  content = 'content7',  user = users[4]))
 blog_entries.append(BlogEntry(title = 'title8',  content = 'content8',  user = users[4]))
+
+topics = []
+topics.append(Topic(name = 'topic1'))
+topics.append(Topic(name = 'topic2'))
+topics.append(Topic(name = 'topic3'))
+topics.append(Topic(name = 'topic4'))
+topics.append(Topic(name = 'topic5'))
+
+questions = []
+questions.append(Question(title = 'title1', content = 'content1', topics = [topics[0], topics[1] ]))
+questions.append(Question(title = 'title2', content = 'content2', topics = [topics[1], ]))
+questions.append(Question(title = 'title3', content = 'content3', topics = [topics[2], ]))
+questions.append(Question(title = 'title4', content = 'content4', topics = [topics[3], ]))
+questions.append(Question(title = 'title5', content = 'content5', topics = [topics[4], ]))
