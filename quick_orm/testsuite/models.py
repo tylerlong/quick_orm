@@ -46,3 +46,6 @@ class Post(object):
 @Database.many_to_many(Topic)
 class Question(Post):
     title = Column(String(64), nullable = False)
+
+class Answer(Post):
+    pass
