@@ -16,7 +16,7 @@ Features
 ********
  - quick: you could get and play with it in less than a minute. It couldn't be more straightforward.
  - easy: you don't have to write any SQL statements, including those "create table xxx ..." ones.
- - simple: the core code counts only 186 lines including comments and pydocs, bugs have nowhere to hide.
+ - simple: the core code counts only 182 lines including comments and pydocs, bugs have nowhere to hide.
  - free: released under BSD license, you are free to use it and distribute it.
  - powerful: built upon SQLAlchemy and doesn't compromise its power.
  - support relationships by means of python decorators.
