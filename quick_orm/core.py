@@ -31,8 +31,7 @@ Please specify something like '?charset=utf8' explicitly.""")
         self.engine = create_engine(connection_string, convert_unicode = True, encoding = 'utf-8')
 
         # If you want to deal with orm, you need session 
-        self.session = scoped_session(sessionmaker(autocommit = False, autoflush = False, bind = self.engine))
-        
+        self.session = scoped_session(sessionmaker(autocommit = False, autoflush = False, bind = self.engine))        
         # extend session to add some shortcut methods
         self.session = SessionExtension.extend(self.session)        
 
@@ -130,12 +129,10 @@ Please specify something like '?charset=utf8' explicitly.""")
             attrs['id'] = Column(Integer, primary_key = True)
 
             # the for loop bellow handles table inheritance
-            for base in [base for base in bases if Database.Base in base.__bases__]:
+            for base in [base for base in bases if getattr(base, '__table__', None) is not None]:
                 if not hasattr(base, 'real_type'):
-                    setattr(base, 'real_type', Column('real_type', String(24), nullable = False, index = True))
-                if base.__mapper__.polymorphic_on is None:
+                    base.real_type = Column('real_type', String(24), nullable = False, index = True)
                     base.__mapper__.polymorphic_on = base.__table__.c.real_type
-                if base.__mapper__.polymorphic_identity is None:
                     base.__mapper__.polymorphic_identity = StringUtil.camelcase_to_underscore(base.__name__)
                     
                 #for ref_grandchildren
@@ -155,10 +152,10 @@ Please specify something like '?charset=utf8' explicitly.""")
     @staticmethod
     def MetaBuilder(*models):
         """Build a new model metaclass. The new metaclass is derived from Database.DefaultMeta,
-        and it will add *models as base classes to the model classes.
+        and it will add *models as base classes to a model class.
         """
         class InnerMeta(Database.DefaultMeta):
-            """metaclass for model classes, it will add *models as bases of the model classes."""
+            """metaclass for model class, it will add *models as bases of the model class."""
             def __new__(cls, name, bases, attrs):
                 bases = list(bases)
                 for model in models:
