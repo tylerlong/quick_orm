@@ -12,11 +12,6 @@ from sqlalchemy.ext.declarative import declarative_base, declared_attr, Declarat
 from extensions import DatabaseExtension, SessionExtension
 
 
-def model_name_to_table_name(model_name):
-    """Convert model name to table name"""
-    return StringUtil.camelcase_to_underscore(model_name)
-
-
 @DatabaseExtension.extend # extend Database to add some useful methods
 class Database(object):
     """Represent a connection to a specific database"""
@@ -55,12 +50,12 @@ Please specify something like '?charset=utf8' explicitly.""")
             ref_model_name = ref_model
         else:
             ref_model_name = ref_model.__name__
-        ref_table_name = model_name_to_table_name(ref_model_name)
+        ref_table_name = StringUtil.camelcase_to_underscore(ref_model_name)
         ref_name = ref_name or ref_table_name
         foreign_key = '{0}_id'.format(ref_name)        
         def ref_table(cls):
             model_name = cls.__name__
-            table_name = model_name_to_table_name(model_name)
+            table_name = StringUtil.camelcase_to_underscore(model_name)
             setattr(cls, foreign_key, Column(Integer, ForeignKey('{0}.id'.format(ref_table_name), ondelete = "CASCADE")))
             # Assign to backref_name will change it to a local variable which we don't want to, so we have to create a new variable.
             # reference: http://docs.python.org/tutorial/classes.html#python-scopes-and-namespaces
@@ -87,10 +82,10 @@ Please specify something like '?charset=utf8' explicitly.""")
             ref_model_name = ref_model
         else:
             ref_model_name = ref_model.__name__
-        ref_table_name = model_name_to_table_name(ref_model_name)
+        ref_table_name = StringUtil.camelcase_to_underscore(ref_model_name)
         ref_name = ref_name or '{0}s'.format(ref_table_name)
         def ref_table(cls):
-            table_name = model_name_to_table_name(cls.__name__)
+            table_name = StringUtil.camelcase_to_underscore(cls.__name__)
             my_middle_table_name = middle_table_name or '{0}_{1}'.format(table_name, ref_table_name)
 
             if table_name == ref_table_name:
@@ -125,7 +120,6 @@ Please specify something like '?charset=utf8' explicitly.""")
         def __new__(cls, name, bases, attrs):
             # add Database.BaseModel as parent class
             bases = list(bases)
-            # no need to inherit object because it's going to inherit other classes which already inherited object
             if object in bases: 
                 bases.remove(object)
             bases.append(Database.BaseModel)
@@ -139,18 +133,18 @@ Please specify something like '?charset=utf8' explicitly.""")
                 if base.__mapper__.polymorphic_on is None:
                     base.__mapper__.polymorphic_on = base.__table__.c.real_type
                 if base.__mapper__.polymorphic_identity is None:
-                    base.__mapper__.polymorphic_identity = model_name_to_table_name(base.__name__)
+                    base.__mapper__.polymorphic_identity = StringUtil.camelcase_to_underscore(base.__name__)
                     
                 #for ref_grandchildren
                 models = Database.BaseModel.__subclasses__()
                 for foreign_key in [foreign_key for foreign_key in base.__table__.foreign_keys 
-                    if any(model_name_to_table_name(model.__name__) == foreign_key.column.table.name for model in models)]:
-                    foreign_model = [model for model in models if model_name_to_table_name(model.__name__) == foreign_key.column.table.name][0]
-                    setattr(foreign_model, model_name_to_table_name(name) + 's', 
-                        property(lambda self: getattr(self, model_name_to_table_name(base.__name__) + 's').filter_by(real_type = model_name_to_table_name(name))))
+                    if any(StringUtil.camelcase_to_underscore(model.__name__) == foreign_key.column.table.name for model in models)]:
+                    foreign_model = [model for model in models if StringUtil.camelcase_to_underscore(model.__name__) == foreign_key.column.table.name][0]
+                    setattr(foreign_model, StringUtil.camelcase_to_underscore(name) + 's', 
+                        property(lambda self: getattr(self, StringUtil.camelcase_to_underscore(base.__name__) + 's').filter_by(real_type = StringUtil.camelcase_to_underscore(name))))
 
-                attrs['id'] = declared_attr(lambda cls: Column(Integer, ForeignKey('{0}.id'.format(model_name_to_table_name(base.__name__)), ondelete = "CASCADE"), primary_key = True))
-                attrs['__mapper_args__'] = declared_attr(lambda cls: {'polymorphic_identity': model_name_to_table_name(name)})              
+                attrs['id'] = declared_attr(lambda cls: Column(Integer, ForeignKey('{0}.id'.format(StringUtil.camelcase_to_underscore(base.__name__)), ondelete = "CASCADE"), primary_key = True))
+                attrs['__mapper_args__'] = declared_attr(lambda cls: {'polymorphic_identity': StringUtil.camelcase_to_underscore(name)})              
 
             return DeclarativeMeta.__new__(cls, name, bases, attrs)
 
@@ -160,7 +154,7 @@ Please specify something like '?charset=utf8' explicitly.""")
         All of user defined metaclasses should be either directly or indirectly derived from this class.
         """
         def __new__(cls, name, bases, attrs):
-            attrs['__tablename__'] = declared_attr(lambda cls: model_name_to_table_name(cls.__name__))
+            attrs['__tablename__'] = declared_attr(lambda cls: StringUtil.camelcase_to_underscore(cls.__name__))
             attrs['id'] = Column(Integer, primary_key = True)
             return Database.BaseMeta.__new__(cls, name, bases, attrs)    
     
