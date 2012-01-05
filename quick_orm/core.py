@@ -113,7 +113,7 @@ Please specify something like '?charset=utf8' explicitly.""")
         return ref_table
 
 
-    class BaseMeta(DeclarativeMeta):
+    class DefaultMeta(DeclarativeMeta):
         """metaclass for all model classes, let model class inherit Database.BaseModel and handle table inheritance.
         All other model metaclasses are either directly or indirectly derived from this class.
         """
@@ -125,6 +125,9 @@ Please specify something like '?charset=utf8' explicitly.""")
             bases.append(Database.BaseModel)
             seen = set()
             bases = tuple(base for base in bases if not base in seen and not seen.add(base))
+            
+            attrs['__tablename__'] = StringUtil.camelcase_to_underscore(name)
+            attrs['id'] = Column(Integer, primary_key = True)
 
             # the for loop bellow handles table inheritance
             for base in [base for base in bases if Database.BaseModel in base.__bases__]:
@@ -146,17 +149,7 @@ Please specify something like '?charset=utf8' explicitly.""")
                 attrs['id'] = declared_attr(lambda cls: Column(Integer, ForeignKey('{0}.id'.format(StringUtil.camelcase_to_underscore(base.__name__)), ondelete = "CASCADE"), primary_key = True))
                 attrs['__mapper_args__'] = declared_attr(lambda cls: {'polymorphic_identity': StringUtil.camelcase_to_underscore(name)})              
 
-            return DeclarativeMeta.__new__(cls, name, bases, attrs)
-
-
-    class DefaultMeta(BaseMeta):
-        """default metaclass for model classes, specify tablename and create a primary key for the model.
-        All of user defined metaclasses should be either directly or indirectly derived from this class.
-        """
-        def __new__(cls, name, bases, attrs):
-            attrs['__tablename__'] = declared_attr(lambda cls: StringUtil.camelcase_to_underscore(cls.__name__))
-            attrs['id'] = Column(Integer, primary_key = True)
-            return Database.BaseMeta.__new__(cls, name, bases, attrs)    
+            return DeclarativeMeta.__new__(cls, name, bases, attrs)  
     
 
     @staticmethod
