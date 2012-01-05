@@ -8,7 +8,7 @@ from toolkit_library.string_util import StringUtil
 from sqlalchemy import create_engine, Column, Integer, ForeignKey, String
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship, backref
 from sqlalchemy.schema import Table
-from sqlalchemy.ext.declarative import declarative_base, declared_attr, DeclarativeMeta
+from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
 from extensions import DatabaseExtension, SessionExtension
 
 
@@ -143,8 +143,8 @@ Please specify something like '?charset=utf8' explicitly.""")
                     setattr(foreign_model, StringUtil.camelcase_to_underscore(name) + 's', 
                         property(lambda self: getattr(self, StringUtil.camelcase_to_underscore(base.__name__) + 's').filter_by(real_type = StringUtil.camelcase_to_underscore(name))))
 
-                attrs['id'] = declared_attr(lambda cls: Column(Integer, ForeignKey('{0}.id'.format(StringUtil.camelcase_to_underscore(base.__name__)), ondelete = "CASCADE"), primary_key = True))
-                attrs['__mapper_args__'] = declared_attr(lambda cls: {'polymorphic_identity': StringUtil.camelcase_to_underscore(name)})              
+                attrs['id'] = Column(Integer, ForeignKey('{0}.id'.format(StringUtil.camelcase_to_underscore(base.__name__)), ondelete = "CASCADE"), primary_key = True)
+                attrs['__mapper_args__'] = {'polymorphic_identity': StringUtil.camelcase_to_underscore(name)}          
 
             return DeclarativeMeta.__new__(cls, name, bases, attrs)  
     
