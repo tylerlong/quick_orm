@@ -16,8 +16,8 @@ from extensions import DatabaseExtension, SessionExtension
 class Database(object):
     """Represent a connection to a specific database"""
 
-    # BaseModel is a class variable, because it has nothing to do with specific instances of this class
-    BaseModel = declarative_base() 
+    # Base is a class variable, because it has nothing to do with specific instances of this class
+    Base = declarative_base() 
 
     def __init__(self, connection_string):
         """Initiate a database engine which is very low level, and a database session which deals with orm."""
@@ -96,7 +96,7 @@ Please specify something like '?charset=utf8' explicitly.""")
                 right_column_name = '{0}_id'.format(ref_table_name)           
 
             middle_table = Table(
-                my_middle_table_name, Database.BaseModel.metadata,
+                my_middle_table_name, Database.Base.metadata,
                 Column(left_column_name, Integer, ForeignKey('{0}.id'.format(table_name), ondelete = "CASCADE"), primary_key = True),
                 Column(right_column_name, Integer, ForeignKey('{0}.id'.format(ref_table_name), ondelete = "CASCADE"), primary_key = True),
             )
@@ -114,15 +114,15 @@ Please specify something like '?charset=utf8' explicitly.""")
 
 
     class DefaultMeta(DeclarativeMeta):
-        """metaclass for all model classes, let model class inherit Database.BaseModel and handle table inheritance.
+        """metaclass for all model classes, let model class inherit Database.Base and handle table inheritance.
         All other model metaclasses are either directly or indirectly derived from this class.
         """
         def __new__(cls, name, bases, attrs):
-            # add Database.BaseModel as parent class
+            # add Database.Base as parent class
             bases = list(bases)
             if object in bases: 
                 bases.remove(object)
-            bases.append(Database.BaseModel)
+            bases.append(Database.Base)
             seen = set()
             bases = tuple(base for base in bases if not base in seen and not seen.add(base))
             
@@ -130,7 +130,7 @@ Please specify something like '?charset=utf8' explicitly.""")
             attrs['id'] = Column(Integer, primary_key = True)
 
             # the for loop bellow handles table inheritance
-            for base in [base for base in bases if Database.BaseModel in base.__bases__]:
+            for base in [base for base in bases if Database.Base in base.__bases__]:
                 if not hasattr(base, 'real_type'):
                     setattr(base, 'real_type', Column('real_type', String(24), nullable = False, index = True))
                 if base.__mapper__.polymorphic_on is None:
@@ -139,7 +139,7 @@ Please specify something like '?charset=utf8' explicitly.""")
                     base.__mapper__.polymorphic_identity = StringUtil.camelcase_to_underscore(base.__name__)
                     
                 #for ref_grandchildren
-                models = Database.BaseModel.__subclasses__()
+                models = Database.Base.__subclasses__()
                 for foreign_key in [foreign_key for foreign_key in base.__table__.foreign_keys 
                     if any(StringUtil.camelcase_to_underscore(model.__name__) == foreign_key.column.table.name for model in models)]:
                     foreign_model = [model for model in models if StringUtil.camelcase_to_underscore(model.__name__) == foreign_key.column.table.name][0]

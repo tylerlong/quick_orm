@@ -15,23 +15,23 @@ class DatabaseExtension(object):
         """Extend database"""
         def create_tables(self):
             """Create all tables"""
-            Database.BaseModel.metadata.create_all(bind = self.engine)
+            Database.Base.metadata.create_all(bind = self.engine)
         Database.create_tables = create_tables
        
         def drop_tables(self):
             """Drop all tables"""
-            Database.BaseModel.metadata.drop_all(bind = self.engine)
+            Database.Base.metadata.drop_all(bind = self.engine)
         Database.drop_tables = drop_tables
 
         def load_data(self, data):
             """Load data into database from a module or an iterable of items 
-            All items must be derived from Database.BaseModel, otherwise will be ignored.
+            All items must be derived from Database.Base, otherwise will be ignored.
             If the data paramter is a module, will try to load data from variables ending with 's' in that module.
             """
             if not data:
                 raise ValueError('data parameter should not be None or empty')
             #Iterable of items
-            if hasattr(data, '__iter__') and all(isinstance(item, Database.BaseModel) for item in data):
+            if hasattr(data, '__iter__') and all(isinstance(item, Database.Base) for item in data):
                 self.session.add_all(data)
                 self.session.commit()
             #Module
