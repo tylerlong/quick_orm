@@ -49,3 +49,6 @@ class Question(Post):
 
 class Answer(Post):
     pass
+
+
+Database.register()

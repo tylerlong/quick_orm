@@ -8,32 +8,42 @@ from toolkit_library.string_util import StringUtil
 from sqlalchemy import create_engine, Column, Integer, ForeignKey, String
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship, backref
 from sqlalchemy.schema import Table
-from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
+from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta, _as_declarative
 from extensions import DatabaseExtension, SessionExtension
+
+models = list()
+
+class MyDeclarativeMeta(DeclarativeMeta):
+    def __init__(cls, classname, bases, dict_):
+        models.append(cls)
+        return type.__init__(cls, classname, bases, dict_)
 
 
 @DatabaseExtension.extend # extend Database to add some useful methods
 class Database(object):
     """Represent a connection to a specific database"""
 
-    # Base is a class variable, because it has nothing to do with specific instances of this class
     Base = declarative_base() 
+
+    @staticmethod
+    def register():
+        for model in models:
+            if not '_decl_class_registry' in model.__dict__:
+                _as_declarative(model, model.__name__, model.__dict__)
+        models[:] = []
 
     def __init__(self, connection_string):
         """Initiate a database engine which is very low level, and a database session which deals with orm."""
+
         # Solve an issue with mysql character encoding(maybe it's a bug of MySQLdb)
         # Refer to http://plone.293351.n2.nabble.com/Troubles-with-encoding-SQLAlchemy-MySQLdb-or-mysql-configuration-pb-td4827540.html
         if 'mysql:' in connection_string and 'charset=' not in connection_string:
             raise ValueError("""No charset was specified for a mysql connection string. 
 Please specify something like '?charset=utf8' explicitly.""")
 
-        # The engine can do everything you can do in a database command console. 
         self.engine = create_engine(connection_string, convert_unicode = True, encoding = 'utf-8')
-
-        # If you want to deal with orm, you need session 
         self.session = scoped_session(sessionmaker(autocommit = False, autoflush = False, bind = self.engine))        
-        # extend session to add some shortcut methods
-        self.session = SessionExtension.extend(self.session)        
+        self.session = SessionExtension.extend(self.session) # extend session to add some shortcut methods    
 
 
     @staticmethod
@@ -112,7 +122,7 @@ Please specify something like '?charset=utf8' explicitly.""")
         return ref_table
 
 
-    class DefaultMeta(DeclarativeMeta):
+    class DefaultMeta(MyDeclarativeMeta):
         """metaclass for all model classes, let model class inherit Database.Base and handle table inheritance.
         All other model metaclasses are either directly or indirectly derived from this class.
         """
@@ -129,24 +139,22 @@ Please specify something like '?charset=utf8' explicitly.""")
             attrs['id'] = Column(Integer, primary_key = True)
 
             # the for loop bellow handles table inheritance
-            for base in [base for base in bases if getattr(base, '__table__', None) is not None]:
+            for base in [base for base in bases if Database.Base in base.__bases__]:
                 if not hasattr(base, 'real_type'):
                     base.real_type = Column('real_type', String(24), nullable = False, index = True)
-                    base.__mapper__.polymorphic_on = base.__table__.c.real_type
-                    base.__mapper__.polymorphic_identity = StringUtil.camelcase_to_underscore(base.__name__)
-                    
-                #for ref_grandchildren
-                models = Database.Base.__subclasses__()
-                for foreign_key in [foreign_key for foreign_key in base.__table__.foreign_keys 
-                    if any(StringUtil.camelcase_to_underscore(model.__name__) == foreign_key.column.table.name for model in models)]:
-                    foreign_model = [model for model in models if StringUtil.camelcase_to_underscore(model.__name__) == foreign_key.column.table.name][0]
-                    setattr(foreign_model, StringUtil.camelcase_to_underscore(name) + 's', 
-                        property(lambda self: getattr(self, StringUtil.camelcase_to_underscore(base.__name__) + 's').filter_by(real_type = StringUtil.camelcase_to_underscore(name))))
+                    base.__mapper_args__ = {'polymorphic_on': base.real_type, 'polymorphic_identity': StringUtil.camelcase_to_underscore(base.__name__)}
 
                 attrs['id'] = Column(Integer, ForeignKey('{0}.id'.format(StringUtil.camelcase_to_underscore(base.__name__)), ondelete = "CASCADE"), primary_key = True)
                 attrs['__mapper_args__'] = {'polymorphic_identity': StringUtil.camelcase_to_underscore(name)}          
+                    
+                #for ref_grandchildren
+                #for foreign_key in [foreign_key for foreign_key in base.__table__.foreign_keys 
+                #    if any(StringUtil.camelcase_to_underscore(model.__name__) == foreign_key.column.table.name for model in models)]:
+                #    foreign_model = [model for model in models if StringUtil.camelcase_to_underscore(model.__name__) == foreign_key.column.table.name][0]
+                #    setattr(foreign_model, StringUtil.camelcase_to_underscore(name) + 's', 
+                #        property(lambda self: getattr(self, StringUtil.camelcase_to_underscore(base.__name__) + 's').filter_by(real_type = StringUtil.camelcase_to_underscore(name))))
 
-            return DeclarativeMeta.__new__(cls, name, bases, attrs)  
+            return MyDeclarativeMeta.__new__(cls, name, bases, attrs)  
     
 
     @staticmethod
