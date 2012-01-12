@@ -87,5 +87,9 @@ class CoreTestCase(unittest.TestCase):
         """Test table inheritance"""
         question_query = db.session.query(Question)
         question_count = question_query.count()
+        assert question_count > 0
         question = db.session.query(Question).filter_by(title = 'question_title_1').first()
         assert question
+
+        assert question.user
+        assert any(question.title == q.title for q in question.user.questions)

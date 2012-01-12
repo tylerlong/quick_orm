@@ -13,6 +13,8 @@ class User(object):
 class Group(object):
     __metaclass__ = metaclass
 
+Database.register()
+
 if __name__ == '__main__':
     db = Database('sqlite://')
     db.create_tables()

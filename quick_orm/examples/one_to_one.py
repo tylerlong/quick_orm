@@ -11,6 +11,8 @@ class Contact(object):
     email = Column(String(70))
     address = Column(String(70))
 
+Database.register()
+
 if __name__ == '__main__':
     db = Database('sqlite://')
     db.create_tables()

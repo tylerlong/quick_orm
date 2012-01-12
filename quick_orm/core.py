@@ -19,6 +19,11 @@ class MyDeclarativeMeta(DeclarativeMeta):
         return type.__init__(cls, classname, bases, dict_)
 
 
+# method to change variable scope of parent and model
+def genearte_property(parent, model):
+    return property(lambda self: getattr(self, StringUtil.camelcase_to_underscore(parent.__name__) + 's')
+                            .filter_by(real_type = StringUtil.camelcase_to_underscore(model.__name__)))
+
 @DatabaseExtension.extend # extend Database to add some useful methods
 class Database(object):
     """Represent a connection to a specific database"""
@@ -27,9 +32,21 @@ class Database(object):
 
     @staticmethod
     def register():
-        for model in models:
-            if not '_decl_class_registry' in model.__dict__:
-                _as_declarative(model, model.__name__, model.__dict__)
+        for i in range(len(models)):
+            model = models[i]
+            if '_decl_class_registry' in model.__dict__:
+                continue
+            _as_declarative(model, model.__name__, model.__dict__)
+            for j in range(i):
+                if not models[j] in model.__bases__:
+                    continue
+                parent = models[j]
+                for k in range(j):
+                    if not hasattr(parent, StringUtil.camelcase_to_underscore(models[k].__name__)):
+                        continue
+                    grandparent = models[k]
+                    setattr(grandparent, StringUtil.camelcase_to_underscore(model.__name__) + 's', genearte_property(parent, model))
+
         models[:] = []
 
     def __init__(self, connection_string):
@@ -139,7 +156,7 @@ Please specify something like '?charset=utf8' explicitly.""")
             attrs['id'] = Column(Integer, primary_key = True)
 
             # the for loop bellow handles table inheritance
-            for base in [base for base in bases if Database.Base in base.__bases__]:
+            for base in [base for base in bases if base in models]:
                 if not hasattr(base, 'real_type'):
                     base.real_type = Column('real_type', String(24), nullable = False, index = True)
                     base.__mapper_args__ = {'polymorphic_on': base.real_type, 'polymorphic_identity': StringUtil.camelcase_to_underscore(base.__name__)}
@@ -147,13 +164,6 @@ Please specify something like '?charset=utf8' explicitly.""")
                 attrs['id'] = Column(Integer, ForeignKey('{0}.id'.format(StringUtil.camelcase_to_underscore(base.__name__)), ondelete = "CASCADE"), primary_key = True)
                 attrs['__mapper_args__'] = {'polymorphic_identity': StringUtil.camelcase_to_underscore(name)}          
                     
-                #for ref_grandchildren
-                #for foreign_key in [foreign_key for foreign_key in base.__table__.foreign_keys 
-                #    if any(StringUtil.camelcase_to_underscore(model.__name__) == foreign_key.column.table.name for model in models)]:
-                #    foreign_model = [model for model in models if StringUtil.camelcase_to_underscore(model.__name__) == foreign_key.column.table.name][0]
-                #    setattr(foreign_model, StringUtil.camelcase_to_underscore(name) + 's', 
-                #        property(lambda self: getattr(self, StringUtil.camelcase_to_underscore(base.__name__) + 's').filter_by(real_type = StringUtil.camelcase_to_underscore(name))))
-
             return MyDeclarativeMeta.__new__(cls, name, bases, attrs)  
     
 

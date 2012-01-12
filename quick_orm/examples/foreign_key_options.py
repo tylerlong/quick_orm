@@ -11,6 +11,8 @@ class Answer(object):
     __metaclass__ = Database.DefaultMeta
     content = Column(Text)
 
+Database.register()
+
 if __name__ == '__main__':
     db = Database('sqlite://')
     db.create_tables()

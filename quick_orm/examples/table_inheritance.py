@@ -21,6 +21,8 @@ class Answer(Post):
 class Comment(Post):
     pass
 
+Database.register()
+
 if __name__ == '__main__':
     db = Database('sqlite://')
     db.create_tables()

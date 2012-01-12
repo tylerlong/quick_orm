@@ -5,6 +5,8 @@ class User(object):
     __metaclass__ = Database.DefaultMeta
     name = Column(String(30))
 
+Database.register()
+
 if __name__ == '__main__':
     db1 = Database('sqlite://')
     db1.create_tables()

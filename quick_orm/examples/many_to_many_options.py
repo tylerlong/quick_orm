@@ -10,6 +10,8 @@ class Role(object):
     __metaclass__ = Database.DefaultMeta
     name = Column(String(30))
 
+Database.register()
+
 if __name__ == '__main__':
     db = Database('sqlite://')
     db.create_tables()

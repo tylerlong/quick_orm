@@ -12,6 +12,8 @@ class Article(object):
     title = Column(String(80))
     content = Column(Text)
 
+Database.register()
+
 if __name__ == '__main__':
     db = Database('sqlite://')
     db.create_tables()
