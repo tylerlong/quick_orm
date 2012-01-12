@@ -22,7 +22,7 @@ class MyDeclarativeMeta(DeclarativeMeta):
 # method to change variable scope of parent and model
 def genearte_property(parent, model):
     return property(lambda self: getattr(self, StringUtil.camelcase_to_underscore(parent.__name__) + 's')
-                            .filter_by(real_type = StringUtil.camelcase_to_underscore(model.__name__)))
+            .filter_by(real_type = StringUtil.camelcase_to_underscore(model.__name__)))
 
 @DatabaseExtension.extend # extend Database to add some useful methods
 class Database(object):
@@ -37,6 +37,8 @@ class Database(object):
             if '_decl_class_registry' in model.__dict__:
                 continue
             _as_declarative(model, model.__name__, model.__dict__)
+
+            # for ref grandchildren
             for j in range(i):
                 if not models[j] in model.__bases__:
                     continue
@@ -83,8 +85,6 @@ Please specify something like '?charset=utf8' explicitly.""")
             model_name = cls.__name__
             table_name = StringUtil.camelcase_to_underscore(model_name)
             setattr(cls, foreign_key, Column(Integer, ForeignKey('{0}.id'.format(ref_table_name), ondelete = "CASCADE")))
-            # Assign to backref_name will change it to a local variable which we don't want to, so we have to create a new variable.
-            # reference: http://docs.python.org/tutorial/classes.html#python-scopes-and-namespaces
             my_backref_name = backref_name or (table_name if one_to_one else '{0}s'.format(table_name))
             backref_options = dict(uselist = False) if one_to_one else dict(lazy = 'dynamic')
             backref_options['cascade'] = 'all'
@@ -121,11 +121,9 @@ Please specify something like '?charset=utf8' explicitly.""")
                 left_column_name = '{0}_id'.format(table_name)
                 right_column_name = '{0}_id'.format(ref_table_name)           
 
-            middle_table = Table(
-                my_middle_table_name, Database.Base.metadata,
+            middle_table = Table(my_middle_table_name, Database.Base.metadata,
                 Column(left_column_name, Integer, ForeignKey('{0}.id'.format(table_name), ondelete = "CASCADE"), primary_key = True),
-                Column(right_column_name, Integer, ForeignKey('{0}.id'.format(ref_table_name), ondelete = "CASCADE"), primary_key = True),
-            )
+                Column(right_column_name, Integer, ForeignKey('{0}.id'.format(ref_table_name), ondelete = "CASCADE"), primary_key = True))
 
             my_backref_name = backref_name or '{0}s'.format(table_name)
             parameters = dict(secondary = middle_table, lazy = 'dynamic', backref = backref(my_backref_name, lazy = 'dynamic'))
@@ -160,9 +158,8 @@ Please specify something like '?charset=utf8' explicitly.""")
                 if not hasattr(base, 'real_type'):
                     base.real_type = Column('real_type', String(24), nullable = False, index = True)
                     base.__mapper_args__ = {'polymorphic_on': base.real_type, 'polymorphic_identity': StringUtil.camelcase_to_underscore(base.__name__)}
-
                 attrs['id'] = Column(Integer, ForeignKey('{0}.id'.format(StringUtil.camelcase_to_underscore(base.__name__)), ondelete = "CASCADE"), primary_key = True)
-                attrs['__mapper_args__'] = {'polymorphic_identity': StringUtil.camelcase_to_underscore(name)}          
+                attrs['__mapper_args__'] = {'polymorphic_identity': StringUtil.camelcase_to_underscore(name), 'inherit_condition': attrs['id'] == base.id}          
                     
             return MyDeclarativeMeta.__new__(cls, name, bases, attrs)  
     
