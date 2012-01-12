@@ -14,10 +14,10 @@ from extensions import DatabaseExtension, SessionExtension
 models = list()
 
 class MyDeclarativeMeta(DeclarativeMeta):
-    def __init__(cls, classname, bases, dict_):
+    #override __init__ of DeclarativeMeta
+    def __init__(cls, classname, bases, attrs):
         models.append(cls)
-        return type.__init__(cls, classname, bases, dict_)
-
+        return type.__init__(cls, classname, bases, attrs)
 
 # method to change variable scope of parent and model
 def genearte_property(parent, model):
@@ -63,7 +63,6 @@ Please specify something like '?charset=utf8' explicitly.""")
         self.engine = create_engine(connection_string, convert_unicode = True, encoding = 'utf-8')
         self.session = scoped_session(sessionmaker(autocommit = False, autoflush = False, bind = self.engine))        
         self.session = SessionExtension.extend(self.session) # extend session to add some shortcut methods    
-
 
     @staticmethod
     def foreign_key(ref_model, ref_name = None, backref_name = None, one_to_one = False):
@@ -157,9 +156,17 @@ Please specify something like '?charset=utf8' explicitly.""")
             for base in [base for base in bases if base in models]:
                 if not hasattr(base, 'real_type'):
                     base.real_type = Column('real_type', String(24), nullable = False, index = True)
-                    base.__mapper_args__ = {'polymorphic_on': base.real_type, 'polymorphic_identity': StringUtil.camelcase_to_underscore(base.__name__)}
+                    if hasattr(base, '__mapper_args__'):
+                        base.__mapper_args__['polymorphic_on'] = base.real_type
+                        base.__mapper_args__['polymorphic_identity'] = StringUtil.camelcase_to_underscore(base.__name__)
+                    else:
+                        base.__mapper_args__ = {'polymorphic_on': base.real_type, 'polymorphic_identity': StringUtil.camelcase_to_underscore(base.__name__)}
                 attrs['id'] = Column(Integer, ForeignKey('{0}.id'.format(StringUtil.camelcase_to_underscore(base.__name__)), ondelete = "CASCADE"), primary_key = True)
-                attrs['__mapper_args__'] = {'polymorphic_identity': StringUtil.camelcase_to_underscore(name), 'inherit_condition': attrs['id'] == base.id}          
+                if '__mapper_args__' in attrs:
+                    attrs['__mapper_args__']['polymorphic_identity'] = StringUtil.camelcase_to_underscore(name)
+                    attrs['__mapper_args__']['inherit_condition'] = attrs['id'] == base.id
+                else:
+                    attrs['__mapper_args__'] = {'polymorphic_identity': StringUtil.camelcase_to_underscore(name), 'inherit_condition': attrs['id'] == base.id}          
                     
             return MyDeclarativeMeta.__new__(cls, name, bases, attrs)  
     
