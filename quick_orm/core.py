@@ -69,10 +69,10 @@ Please specify something like '?charset=utf8' explicitly.""")
     def foreign_key(ref_model, ref_name = None, backref_name = None, one_to_one = False):
         """"Class decorator, add a foreign key to a SQLAlchemy model.
         Parameters:
-        ref_model is the destination model, in a one-to-many relationship, it is the "one" side.
-        ref_name is the user-friendly name of destination model(if omitted, destintion table name will be used instead).
-        backref_name is the name used to back ref the "many" side.
-        one_to_one: is this foreign_key for a one-to-one relationship?
+            ref_model is the destination model, in a one-to-many relationship, it is the "one" side.
+            ref_name is the user-friendly name of destination model(if omitted, destintion table name will be used instead).
+            backref_name is the name used to back ref the "many" side.
+            one_to_one is this foreign_key for a one-to-one relationship?
         """
         if isinstance(ref_model, str):
             ref_model_name = ref_model
@@ -99,10 +99,10 @@ Please specify something like '?charset=utf8' explicitly.""")
     def many_to_many(ref_model, ref_name = None, backref_name = None, middle_table_name = None):
         """Class Decorator, add a many-to-many relationship between two SQLAlchemy models.
         Parameters:
-        ref_table_name is the name of the destination table, it is NOT the one decorated by this method.
-        ref_name is how this model reference the destination models.
-        backref_name is how the destination model reference this model.
-        middle_table_name is the middle table name of this many-to-many relationship.
+            ref_table_name is the name of the destination table, it is NOT the one decorated by this method.
+            ref_name is how this model reference the destination models.
+            backref_name is how the destination model reference this model.
+            middle_table_name is the middle table name of this many-to-many relationship.
         """
         if isinstance(ref_model, str):
             ref_model_name = ref_model
