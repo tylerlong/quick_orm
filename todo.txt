@@ -1,10 +1,6 @@
-9. multiple inheritance?
-
 10. full text search. (class decorator for model?)
 
 12. fomal docs, including a comprehensive example
-
-15. db.session.query(User) ==> User.query(db) (Is it neccessary?)
 
 19. _avatar = Column('avatar', LargeBinary)
     def get_avatar(self):
@@ -17,8 +13,6 @@
     equivalent to  "avatar = Column(LargeBinary, default = default_avatar)"
     but the default value isn't saved to database, preferred.
     there should be a convenient way to do this. (preferrablly by one line of code)
-
-21. README.rst is not well formatted on github, especially the source code
 
 25. move content in __init__() to DatabaseExtension?
 
