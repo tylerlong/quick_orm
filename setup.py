@@ -20,7 +20,7 @@ with open('requires.txt', 'r') as file:
     requirements = text.splitlines()
 with open('quick_orm/core.py', 'r') as file:
     readme = readme.replace('{{ lines_count }}', str(len(file.read().splitlines())))
-with open('README.rst', 'w') as file:
+with open('README', 'w') as file:
     file.write(readme)
 
 
