@@ -1,12 +1,10 @@
-9. multiple inheritance
+9. multiple inheritance?
 
 10. full text search. (class decorator for model?)
 
 12. fomal docs, including a comprehensive example
 
 15. db.session.query(User) ==> User.query(db) (Is it neccessary?)
-
-17. study from flask-sqlalchemy, and other orm frameworks
 
 19. _avatar = Column('avatar', LargeBinary)
     def get_avatar(self):
@@ -21,8 +19,6 @@
     there should be a convenient way to do this. (preferrablly by one line of code)
 
 21. README.rst is not well formatted on github, especially the source code
-
-23. table inheritance broken in sqlalchemy 0.7.4, real_type field empty
 
 25. move content in __init__() to DatabaseExtension?
 

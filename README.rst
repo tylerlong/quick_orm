@@ -2,7 +2,9 @@
 Quick ORM
 =========
 
-***Warning***: NOT compatible with SQLAlchemy 0.7.4. I am going to solve the problem. In the mean time, please use SQLAlchemy 0.7.3.
+
+***Notice***: upgrading to quick_orm 0.3.x from previous versions requires adding one line of code: "Database.register()". Please refer to the examples. 
+
 
 Introduction
 ************
@@ -29,8 +31,8 @@ Features
 
 Prerequisites 
 *************
-You need Python 2.6 or above. I haven't test it against Python 3+. I will do it soon.
-SQLAlchemy==0.7.3
+You need Python 2.6 or above. I haven't test it against Python 3+.
+SQLAlchemy>=0.7.3
 toolkit_library>=0.3.8
 If you are using pip to manage python packages, you don't have to install the prerequisites separately, they will be installed automatically.
        
