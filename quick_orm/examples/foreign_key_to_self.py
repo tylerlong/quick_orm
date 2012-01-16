@@ -1,9 +1,10 @@
 from quick_orm.core import Database
 from sqlalchemy import Column, String
 
+__metaclass__ = Database.DefaultMeta
+
 @Database.foreign_key('Node', ref_name = 'parent_node', backref_name = 'children_nodes')
-class Node(object):
-    __metaclass__ = Database.DefaultMeta
+class Node:
     name = Column(String(70))
 
 Database.register()

@@ -1,13 +1,13 @@
 from quick_orm.core import Database
 from sqlalchemy import Column, String
 
-class User(object):
-    __metaclass__ = Database.DefaultMeta
+__metaclass__ = Database.DefaultMeta
+
+class User:
     name = Column(String(30))
 
 @Database.many_to_many(User)
-class Role(object):
-    __metaclass__ = Database.DefaultMeta
+class Role:
     name = Column(String(30))
 
 Database.register()

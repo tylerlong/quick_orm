@@ -1,9 +1,10 @@
 from quick_orm.core import Database
 from sqlalchemy import Column, String
 
+__metaclass__ = Database.DefaultMeta
+
 @Database.many_to_many('User', ref_name = 'users_i_follow', backref_name = 'users_follow_me')
-class User(object):
-    __metaclass__ = Database.DefaultMeta
+class User:
     name = Column(String(30))
 
 Database.register()

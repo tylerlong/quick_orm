@@ -1,17 +1,18 @@
 from quick_orm.core import Database
 from sqlalchemy import Column, String, DateTime, func
 
-class DefaultModel(object):
+class DefaultModel:
     name = Column(String(70))
     created = Column(DateTime, default = func.now(), nullable = False)
 
 metaclass = Database.MetaBuilder(DefaultModel)
+__metaclass__ = metaclass
 
-class User(object):
-    __metaclass__ = metaclass
+class User:
+    pass
 
-class Group(object):
-    __metaclass__ = metaclass
+class Group:
+    pass
 
 Database.register()
 

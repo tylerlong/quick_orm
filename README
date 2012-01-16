@@ -25,7 +25,7 @@ Features
  - support table inheritance in a most natural way.
  - support multiple databases: you can map your models to many databases without difficulty.
  - write less, do more: taking advantage of python metaclass reduces data modeling code dramatically.
- - long-term maintained: Continous efforts are taking to improve and maintain it.
+ - long-term maintained: Continous efforts are taken to improve and maintain it.
 
 
 
@@ -52,8 +52,9 @@ Hello World example
     from quick_orm.core import Database
     from sqlalchemy import Column, String
     
-    class User(object):
-        __metaclass__ = Database.DefaultMeta
+    __metaclass__ = Database.DefaultMeta
+    
+    class User:
         name = Column(String(30))
     
     Database.register()
@@ -74,14 +75,14 @@ Foreign key example
     from quick_orm.core import Database
     from sqlalchemy import Column, String, Text
     
-    class Question(object):
-        __metaclass__ = Database.DefaultMeta
+    __metaclass__ = Database.DefaultMeta
+    
+    class Question:
         title = Column(String(70))
         content = Column(Text)
     
     @Database.foreign_key(Question)
-    class Answer(object):
-        __metaclass__ = Database.DefaultMeta
+    class Answer:
         content = Column(Text)
     
     Database.register()
@@ -104,14 +105,14 @@ Foreign key options example
     from quick_orm.core import Database
     from sqlalchemy import Column, String, Text
     
-    class Question(object):
-        __metaclass__ = Database.DefaultMeta
+    __metaclass__ = Database.DefaultMeta
+    
+    class Question:
         title = Column(String(70))
         content = Column(Text)
     
     @Database.foreign_key(Question, ref_name = 'question', backref_name = 'answers')
-    class Answer(object):
-        __metaclass__ = Database.DefaultMeta
+    class Answer:
         content = Column(Text)
     
     Database.register()
@@ -134,9 +135,10 @@ Foreign key to oneself example
     from quick_orm.core import Database
     from sqlalchemy import Column, String
     
+    __metaclass__ = Database.DefaultMeta
+    
     @Database.foreign_key('Node', ref_name = 'parent_node', backref_name = 'children_nodes')
-    class Node(object):
-        __metaclass__ = Database.DefaultMeta
+    class Node:
         name = Column(String(70))
     
     Database.register()
@@ -160,13 +162,13 @@ Many-to-many relationship example
     from quick_orm.core import Database
     from sqlalchemy import Column, String
     
-    class User(object):
-        __metaclass__ = Database.DefaultMeta
+    __metaclass__ = Database.DefaultMeta
+    
+    class User:
         name = Column(String(30))
     
     @Database.many_to_many(User)
-    class Role(object):
-        __metaclass__ = Database.DefaultMeta
+    class Role:
         name = Column(String(30))
     
     Database.register()
@@ -189,13 +191,13 @@ Many-to-many relationship options example
     from quick_orm.core import Database
     from sqlalchemy import Column, String
     
-    class User(object):
-        __metaclass__ = Database.DefaultMeta
+    __metaclass__ = Database.DefaultMeta
+    
+    class User:
         name = Column(String(30))
     
     @Database.many_to_many(User, ref_name = 'users', backref_name = 'roles', middle_table_name = 'user_role')
-    class Role(object):
-        __metaclass__ = Database.DefaultMeta
+    class Role:
         name = Column(String(30))
     
     Database.register()
@@ -218,9 +220,10 @@ Many-to-many relationship with oneself example
     from quick_orm.core import Database
     from sqlalchemy import Column, String
     
+    __metaclass__ = Database.DefaultMeta
+    
     @Database.many_to_many('User', ref_name = 'users_i_follow', backref_name = 'users_follow_me')
-    class User(object):
-        __metaclass__ = Database.DefaultMeta
+    class User:
         name = Column(String(30))
     
     Database.register()
@@ -246,13 +249,13 @@ One-to-one relationship example
     from quick_orm.core import Database
     from sqlalchemy import Column, String
     
-    class User(object):
-        __metaclass__ = Database.DefaultMeta
+    __metaclass__ = Database.DefaultMeta
+    
+    class User:
         name = Column(String(30))
     
     @Database.foreign_key(User, one_to_one = True)
-    class Contact(object):
-        __metaclass__ = Database.DefaultMeta
+    class Contact:
         email = Column(String(70))
         address = Column(String(70))
     
@@ -277,14 +280,14 @@ Multiple foreign keys example
     from quick_orm.core import Database
     from sqlalchemy import Column, String, Text
     
-    class User(object):
-        __metaclass__ = Database.DefaultMeta
+    __metaclass__ = Database.DefaultMeta
+    
+    class User:
         name = Column(String(30))
     
     @Database.foreign_key(User, ref_name = 'author', backref_name = 'articles_authored')
     @Database.foreign_key(User, ref_name = 'editor', backref_name = 'articles_edited')
-    class Article(object):
-        __metaclass__ = Database.DefaultMeta
+    class Article:
         title = Column(String(80))
         content = Column(Text)
     
@@ -311,8 +314,9 @@ Performing raw sql query example
     from quick_orm.core import Database
     from sqlalchemy import Column, String
     
-    class User(object):
-        __metaclass__ = Database.DefaultMeta
+    __metaclass__ = Database.DefaultMeta
+    
+    class User:
         name = Column(String(70))
     
     Database.register()
@@ -330,8 +334,9 @@ Multiple databases example
     from quick_orm.core import Database
     from sqlalchemy import Column, String
     
-    class User(object):
-        __metaclass__ = Database.DefaultMeta
+    __metaclass__ = Database.DefaultMeta
+    
+    class User:
         name = Column(String(30))
     
     Database.register()
@@ -357,13 +362,13 @@ Table inheritance example
     from quick_orm.core import Database
     from sqlalchemy import Column, String, Text
     
-    class User(object):
-        __metaclass__ = Database.DefaultMeta
+    __metaclass__ = Database.DefaultMeta
+    
+    class User:
         name = Column(String(70))
     
     @Database.foreign_key(User)
-    class Post(object):
-        __metaclass__ = Database.DefaultMeta
+    class Post:
         content = Column(Text)
     
     class Question(Post):
@@ -407,17 +412,18 @@ MetaBuilder to avoid duplicate code example
     from quick_orm.core import Database
     from sqlalchemy import Column, String, DateTime, func
     
-    class DefaultModel(object):
+    class DefaultModel:
         name = Column(String(70))
         created = Column(DateTime, default = func.now(), nullable = False)
     
     metaclass = Database.MetaBuilder(DefaultModel)
+    __metaclass__ = metaclass
     
-    class User(object):
-        __metaclass__ = metaclass
+    class User:
+        pass
     
-    class Group(object):
-        __metaclass__ = metaclass
+    class Group:
+        pass
     
     Database.register()
     

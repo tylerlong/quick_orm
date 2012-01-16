@@ -1,14 +1,14 @@
 from quick_orm.core import Database
 from sqlalchemy import Column, String, Text
 
-class Question(object):
-    __metaclass__ = Database.DefaultMeta
+__metaclass__ = Database.DefaultMeta
+
+class Question:
     title = Column(String(70))
     content = Column(Text)
 
 @Database.foreign_key(Question, ref_name = 'question', backref_name = 'answers')
-class Answer(object):
-    __metaclass__ = Database.DefaultMeta
+class Answer:
     content = Column(Text)
 
 Database.register()

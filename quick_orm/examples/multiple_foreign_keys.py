@@ -1,14 +1,14 @@
 from quick_orm.core import Database
 from sqlalchemy import Column, String, Text
 
-class User(object):
-    __metaclass__ = Database.DefaultMeta
+__metaclass__ = Database.DefaultMeta
+
+class User:
     name = Column(String(30))
 
 @Database.foreign_key(User, ref_name = 'author', backref_name = 'articles_authored')
 @Database.foreign_key(User, ref_name = 'editor', backref_name = 'articles_edited')
-class Article(object):
-    __metaclass__ = Database.DefaultMeta
+class Article:
     title = Column(String(80))
     content = Column(Text)
 

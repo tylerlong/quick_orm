@@ -1,13 +1,13 @@
 from quick_orm.core import Database
 from sqlalchemy import Column, String
 
-class User(object):
-    __metaclass__ = Database.DefaultMeta
+__metaclass__ = Database.DefaultMeta
+
+class User:
     name = Column(String(30))
 
 @Database.foreign_key(User, one_to_one = True)
-class Contact(object):
-    __metaclass__ = Database.DefaultMeta
+class Contact:
     email = Column(String(70))
     address = Column(String(70))
 

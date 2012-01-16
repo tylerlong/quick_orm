@@ -25,7 +25,7 @@ Features
  - support table inheritance in a most natural way.
  - support multiple databases: you can map your models to many databases without difficulty.
  - write less, do more: taking advantage of python metaclass reduces data modeling code dramatically.
- - long-term maintained: Continous efforts are taking to improve and maintain it.
+ - long-term maintained: Continous efforts are taken to improve and maintain it.
 
 
 
