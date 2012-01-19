@@ -5,8 +5,7 @@ class DefaultModel:
     name = Column(String(70))
     created = Column(DateTime, default = func.now(), nullable = False)
 
-metaclass = Database.MetaBuilder(DefaultModel)
-__metaclass__ = metaclass
+__metaclass__ = Database.MetaBuilder(DefaultModel)
 
 class User:
     pass
