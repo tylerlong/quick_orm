@@ -19,10 +19,6 @@ class MyDeclarativeMeta(DeclarativeMeta):
         models.append(cls)
         return type.__init__(cls, classname, bases, attrs)
 
-# method to change variable scope of parent and model
-def genearte_property(parent, model):
-    return property(lambda self: getattr(self, StringUtil.camelcase_to_underscore(parent.__name__) + 's')
-            .filter_by(real_type = StringUtil.camelcase_to_underscore(model.__name__)))
 
 @DatabaseExtension.extend # extend Database to add some useful methods
 class Database(object):
@@ -43,11 +39,16 @@ class Database(object):
                 if not models[j] in model.__bases__:
                     continue
                 parent = models[j]
+               # if hasattr(parent, '_one_to_one_models'):
+               #     for grandparent in getattr(parent, '_one_to_one_models'):
+                        
                 for k in range(j):
                     if not hasattr(parent, StringUtil.camelcase_to_underscore(models[k].__name__)):
                         continue
                     grandparent = models[k]
-                    setattr(grandparent, StringUtil.camelcase_to_underscore(model.__name__) + 's', genearte_property(parent, model))
+                    setattr(grandparent, StringUtil.camelcase_to_underscore(model.__name__) + 's', 
+                            (lambda parent, model: property(lambda self: getattr(self, StringUtil.camelcase_to_underscore(parent.__name__) + 's')
+                            .filter_by(real_type = StringUtil.camelcase_to_underscore(model.__name__))))(parent, model))
 
         models[:] = []
 
@@ -81,6 +82,12 @@ Please specify something like '?charset=utf8' explicitly.""")
         ref_name = ref_name or ref_table_name
         foreign_key = '{0}_id'.format(ref_name)        
         def ref_table(cls):
+            if not isinstance(ref_model, str):
+                foreign_key_attr = '_one_to_one_models' if one_to_one else '_many_to_one_models'
+                if not hasattr(cls, foreign_key_attr):
+                    setattr(cls, foreign_key_attr, [ref_model, ])
+                else:
+                    getattr(cls, foreign_key_attr).append(ref_model)
             model_name = cls.__name__
             table_name = StringUtil.camelcase_to_underscore(model_name)
             setattr(cls, foreign_key, Column(Integer, ForeignKey('{0}.id'.format(ref_table_name), ondelete = "CASCADE")))
@@ -110,6 +117,11 @@ Please specify something like '?charset=utf8' explicitly.""")
         ref_table_name = StringUtil.camelcase_to_underscore(ref_model_name)
         ref_name = ref_name or '{0}s'.format(ref_table_name)
         def ref_table(cls):
+            if not isinstance(ref_model, str):
+                if not hasattr(cls, '_many_to_many_models'):
+                    setattr(cls, '_many_to_many_models', [ref_model, ])
+                else:
+                    getattr(cls, '_many_to_many_models').append(ref_model)
             table_name = StringUtil.camelcase_to_underscore(cls.__name__)
             my_middle_table_name = middle_table_name or '{0}_{1}'.format(table_name, ref_table_name)
 

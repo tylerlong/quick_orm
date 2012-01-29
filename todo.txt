@@ -16,4 +16,4 @@
 
 25. move content in __init__() to DatabaseExtension?
 
-26. 
+26. orm for nosql? such as this one: http://qslack.com/projects/rhino-a-ruby-hbase-orm/
