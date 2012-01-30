@@ -48,7 +48,6 @@ class Database(object):
                     setattr(grandparent, model._readable_name, 
                         (lambda parent, model: property(lambda self: getattr(self, parent._readable_name) 
                             if getattr(self, parent._readable_name).real_type == model._readable_name else None))(parent, model))
-
         models[:] = []
 
     def __init__(self, connection_string):
@@ -129,20 +128,18 @@ Please specify something like '?charset=utf8' explicitly.""")
             if backref_name:
                 cls._readable_names = backref_name
             if not isinstance(ref_model, str):
-                if ref_name:
-                    ref_model._readable_names = ref_name
+                ref_model._readable_names = ref_name
                 cls._many_to_models.append(ref_model)
                 ref_model._many_to_models.append(cls)
             table_name = cls._readable_name
-            my_middle_table_name = middle_table_name or '{0}_{1}'.format(table_name, ref_table_name)
 
+            my_middle_table_name = middle_table_name or '{0}_{1}'.format(table_name, ref_table_name)
             if table_name == ref_table_name:
                 left_column_name = 'left_id'
                 right_column_name = 'right_id'                
             else:
                 left_column_name = '{0}_id'.format(table_name)
                 right_column_name = '{0}_id'.format(ref_table_name)           
-
             middle_table = Table(my_middle_table_name, Database.Base.metadata,
                 Column(left_column_name, Integer, ForeignKey('{0}.id'.format(table_name), ondelete = "CASCADE"), primary_key = True),
                 Column(right_column_name, Integer, ForeignKey('{0}.id'.format(ref_table_name), ondelete = "CASCADE"), primary_key = True))
@@ -206,8 +203,7 @@ Please specify something like '?charset=utf8' explicitly.""")
             """metaclass for model class, it will add *models as bases of the model class."""
             def __new__(cls, name, bases, attrs):
                 bases = list(bases)
-                for model in models:
-                    bases.append(model)
+                bases.extend(models)
                 seen = set()
                 bases = tuple(base for base in bases if not base in seen and not seen.add(base))
                 return Database.DefaultMeta.__new__(cls, name, bases, attrs)
