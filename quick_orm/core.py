@@ -39,10 +39,15 @@ class Database(object):
                 if not models[j] in model.__bases__:
                     continue
                 parent = models[j]
-                for grandparent in parent._many_to_one_models:
-                    setattr(grandparent, model._backref_name, 
-                        (lambda parent, model: property(lambda self: getattr(self, parent._backref_name)
-                        .filter_by(real_type = StringUtil.camelcase_to_underscore(model.__name__))))(parent, model))
+                for grandparent in parent._many_to_models:
+                    setattr(grandparent, model._readable_names, 
+                        (lambda parent, model: property(lambda self: getattr(self, parent._readable_names)
+                        .filter_by(real_type = model._readable_name)))(parent, model))
+
+                for grandparent in parent._one_to_models:
+                    setattr(grandparent, model._readable_name, 
+                        (lambda parent, model: property(lambda self: getattr(self, parent._readable_name) 
+                            if getattr(self, parent._readable_name).real_type == model._readable_name else None))(parent, model))
 
         models[:] = []
 
@@ -77,17 +82,23 @@ Please specify something like '?charset=utf8' explicitly.""")
         foreign_key = '{0}_id'.format(ref_name)        
         def ref_table(cls):
             if one_to_one:
+                if backref_name:
+                    cls._readable_name = backref_name
                 if not isinstance(ref_model, str):
-                    cls._one_to_one_models.append(ref_model)
-                    ref_model._one_to_one_models.append(cls)
+                    if ref_name:
+                        ref_model._readable_name = ref_name
+                    cls._one_to_models.append(ref_model)
+                    ref_model._one_to_models.append(cls)
             else:
                 if backref_name:
-                    cls._backref_name = backref_name                
+                    cls._readable_names = backref_name                
                 if not isinstance(ref_model, str):
-                    cls._many_to_one_models.append(ref_model)
-                    ref_model._one_to_many_models.append(cls)
+                    if ref_name:
+                        ref_model._readable_name = ref_name
+                    cls._many_to_models.append(ref_model)
+                    ref_model._one_to_models.append(cls)
             model_name = cls.__name__
-            table_name = StringUtil.camelcase_to_underscore(model_name)
+            table_name = cls._readable_name
             setattr(cls, foreign_key, Column(Integer, ForeignKey('{0}.id'.format(ref_table_name), ondelete = "CASCADE")))
             my_backref_name = backref_name or (table_name if one_to_one else '{0}s'.format(table_name))
             backref_options = dict(uselist = False) if one_to_one else dict(lazy = 'dynamic')
@@ -116,13 +127,13 @@ Please specify something like '?charset=utf8' explicitly.""")
         ref_name = ref_name or '{0}s'.format(ref_table_name)
         def ref_table(cls):
             if backref_name:
-                cls._backref_name = backref_name
+                cls._readable_names = backref_name
             if not isinstance(ref_model, str):
                 if ref_name:
-                    ref_model._backref_name = ref_name
-                cls._many_to_many_models.append(ref_model)
-                ref_model._many_to_many_models.append(cls)
-            table_name = StringUtil.camelcase_to_underscore(cls.__name__)
+                    ref_model._readable_names = ref_name
+                cls._many_to_models.append(ref_model)
+                ref_model._many_to_models.append(cls)
+            table_name = cls._readable_name
             my_middle_table_name = middle_table_name or '{0}_{1}'.format(table_name, ref_table_name)
 
             if table_name == ref_table_name:
@@ -163,8 +174,9 @@ Please specify something like '?charset=utf8' explicitly.""")
             
             attrs['__tablename__'] = StringUtil.camelcase_to_underscore(name)
             attrs['id'] = Column(Integer, primary_key = True)
-            attrs['_backref_name'] = StringUtil.camelcase_to_underscore(name) + 's'
-            attrs['_one_to_one_models'] = attrs['_many_to_one_models'] = attrs['_one_to_many_models'] = attrs['_many_to_many_models'] = []
+            attrs['_readable_name'] = attrs['__tablename__']
+            attrs['_readable_names'] =  attrs['_readable_name'] + 's'
+            attrs['_one_to_models'] = attrs['_many_to_models'] = []
 
             # the for loop bellow handles table inheritance
             for base in [base for base in bases if base in models]:
@@ -172,15 +184,15 @@ Please specify something like '?charset=utf8' explicitly.""")
                     base.real_type = Column('real_type', String(24), nullable = False, index = True)
                     if hasattr(base, '__mapper_args__'):
                         base.__mapper_args__['polymorphic_on'] = base.real_type
-                        base.__mapper_args__['polymorphic_identity'] = StringUtil.camelcase_to_underscore(base.__name__)
+                        base.__mapper_args__['polymorphic_identity'] = base._readable_name
                     else:
-                        base.__mapper_args__ = {'polymorphic_on': base.real_type, 'polymorphic_identity': StringUtil.camelcase_to_underscore(base.__name__)}
-                attrs['id'] = Column(Integer, ForeignKey('{0}.id'.format(StringUtil.camelcase_to_underscore(base.__name__)), ondelete = "CASCADE"), primary_key = True)
+                        base.__mapper_args__ = {'polymorphic_on': base.real_type, 'polymorphic_identity': base._readable_name}
+                attrs['id'] = Column(Integer, ForeignKey('{0}.id'.format(base._readable_name), ondelete = "CASCADE"), primary_key = True)
                 if '__mapper_args__' in attrs:
-                    attrs['__mapper_args__']['polymorphic_identity'] = StringUtil.camelcase_to_underscore(name)
+                    attrs['__mapper_args__']['polymorphic_identity'] = attrs['_readable_name']
                     attrs['__mapper_args__']['inherit_condition'] = attrs['id'] == base.id
                 else:
-                    attrs['__mapper_args__'] = {'polymorphic_identity': StringUtil.camelcase_to_underscore(name), 'inherit_condition': attrs['id'] == base.id}          
+                    attrs['__mapper_args__'] = {'polymorphic_identity': attrs['_readable_name'], 'inherit_condition': attrs['id'] == base.id}          
                     
             return MyDeclarativeMeta.__new__(cls, name, bases, attrs)  
     
