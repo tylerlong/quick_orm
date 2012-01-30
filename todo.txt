@@ -17,3 +17,9 @@
 25. move content in __init__() to DatabaseExtension?
 
 26. orm for nosql? such as this one: http://qslack.com/projects/rhino-a-ruby-hbase-orm/
+
+27. 将ref_grandchildren推而广之到one_to_one, many_to_one, many_to_many三种关系当中
+
+28. 将ref_grandchildren中的复数形式的名字搞正确, 方式就是在class decorator的那一步记下来
+
+29. 签入之前把这些中文的文字去掉或者改掉.
