@@ -17,3 +17,9 @@
 25. move content in __init__() to DatabaseExtension?
 
 26. orm for nosql? such as this one: http://qslack.com/projects/rhino-a-ruby-hbase-orm/
+
+27. ref_grandchildren can't access ref some attributes of grandchildren. for example: everblog project: tag.blog_entrys.lang report an error.
+
+28. add everblog as a real life example to README
+
+30. 
