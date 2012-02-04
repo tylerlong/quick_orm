@@ -3,13 +3,15 @@ Quick ORM
 =========
 
 
-***Notice***: upgrading to quick_orm 0.3.x from previous versions requires adding one line of code: "Database.register()". Please refer to the examples. 
+**News**: quick_orm is fully compatible with the newest SQLAlchemy 0.7.5.
 
 
 Introduction
 ************
 A python ORM which enables you to get started in less than a minute! 
+
 Super easy to setup and super easy to use, yet super powerful! 
+
 You would regret that you didn't discorver it earlier!
 
 
@@ -18,7 +20,7 @@ Features
 ********
  - quick: you could get and play with it in less than a minute. It couldn't be more straightforward.
  - easy: you don't have to write any SQL statements, including those "create table xxx ..." ones.
- - simple: the core code counts only 210 lines including comments and pydocs, there is no room for bugs.
+ - simple: the core code counts only 208 lines including comments and pydocs, there is no room for bugs.
  - free: released under BSD license, you are free to use it and distribute it.
  - powerful: built upon SQLAlchemy and doesn't compromise its power.
  - support relationships by means of python decorators.
@@ -29,26 +31,22 @@ Features
 
 
 
-Prerequisites 
-*************
-You need Python 2.6 or above. It does NOT support Python 3 yet.
-SQLAlchemy>=0.7.3
-toolkit_library>=0.3.8
-If you are using pip to manage python packages, you don't have to install the prerequisites separately, they will be installed automatically.
-       
+Quick Start 
+***********
 
+::
 
-How to install or upgrade ? 
-***************************
-Just one command:  
-    pip install --upgrade quick_orm    
-Alternatively you could download the source code and issue command: python setup.py install 
-If you choose to install from source code, you have to install the prerequisites manually.
+    pip install quick_orm    
+
+Refer to the following examples to write your own database manipulation code.
 
 
 
 Hello World example
 *******************
+
+::
+
     from quick_orm.core import Database
     from sqlalchemy import Column, String
     
@@ -69,9 +67,11 @@ Hello World example
         user = db.session.query(User).get(1)
         print 'My name is', user.name
 
-
 Foreign key example
 *******************
+
+::
+
     from quick_orm.core import Database
     from sqlalchemy import Column, String, Text
     
@@ -99,9 +99,11 @@ Foreign key example
         print 'The question is:', question.title
         print 'The answer is:', question.answers.first().content
 
-
 Foreign key options example
 ***************************
+
+::
+
     from quick_orm.core import Database
     from sqlalchemy import Column, String, Text
     
@@ -129,9 +131,11 @@ Foreign key options example
         print 'The question is:', question.title
         print 'The answer is:', question.answers.first().content
 
-
 Foreign key to oneself example
 ******************************
+
+::
+
     from quick_orm.core import Database
     from sqlalchemy import Column, String
     
@@ -156,9 +160,11 @@ Foreign key to oneself example
         print 'Root node have {0} children nodes, they are {1}'\
             .format(root_node.children_nodes.count(), ', '.join(node.name for node in root_node.children_nodes))
 
-
 Many-to-many relationship example
 *********************************
+
+::
+
     from quick_orm.core import Database
     from sqlalchemy import Column, String
     
@@ -185,9 +191,11 @@ Many-to-many relationship example
         admin_role = db.session.query(Role).filter_by(name = 'Administrator').one()
         print ', '.join([user.name for user in admin_role.users]), 'are admintrators'
 
-
 Many-to-many relationship options example
 *****************************************
+
+::
+
     from quick_orm.core import Database
     from sqlalchemy import Column, String
     
@@ -214,9 +222,11 @@ Many-to-many relationship options example
         admin_role = db.session.query(Role).filter_by(name = 'Administrator').one()
         print ', '.join([user.name for user in admin_role.users]), 'are admintrators'
 
-
 Many-to-many relationship with oneself example
 **********************************************
+
+::
+
     from quick_orm.core import Database
     from sqlalchemy import Column, String
     
@@ -243,9 +253,11 @@ Many-to-many relationship with oneself example
         mark = db.session.query(User).filter_by(name = 'Mark Wong').one()
         print 'Mark Wong is following:', ', '.join(user.name for user in mark.users_i_follow)
 
-
 One-to-one relationship example
 *******************************
+
+::
+
     from quick_orm.core import Database
     from sqlalchemy import Column, String
     
@@ -274,9 +286,11 @@ One-to-one relationship example
         print 'Email:', user.contact.email
         print 'Address:', user.contact.address
 
-
 Multiple foreign keys example
 *****************************
+
+::
+
     from quick_orm.core import Database
     from sqlalchemy import Column, String, Text
     
@@ -308,9 +322,11 @@ Multiple foreign keys example
         print 'Author:', article.author.name
         print 'Editor:', article.editor.name
 
-
 Performing raw sql query example
 ********************************
+
+::
+
     from quick_orm.core import Database
     from sqlalchemy import Column, String
     
@@ -328,9 +344,11 @@ Performing raw sql query example
         count = db.engine.execute('select count(name) from user').scalar()
         print 'There are {0} users in total'.format(count)
 
-
 Multiple databases example
 **************************
+
+::
+
     from quick_orm.core import Database
     from sqlalchemy import Column, String
     
@@ -356,9 +374,11 @@ Multiple databases example
         print 'I am', db1.session.query(User).get(1).name
         print 'I am', db2.session.query(User).get(1).name
 
-
 Table inheritance example
 *************************
+
+::
+
     from quick_orm.core import Database
     from sqlalchemy import Column, String, Text
     
@@ -420,9 +440,11 @@ Table inheritance example
         tag = db.session.query(Tag).filter_by(name = 'quick_orm').first()
         print '{0} questions are tagged "quick_orm"'.format(tag.questions.count())
 
-
 MetaBuilder to avoid duplicate code example
 *******************************************
+
+::
+
     from quick_orm.core import Database
     from sqlalchemy import Column, String, DateTime, func
     
@@ -453,18 +475,24 @@ MetaBuilder to avoid duplicate code example
 
 
 
-More examples
-*************
-More examples could be found in folder site-packages/quick_orm/examples/
-And even more examples are being added   
+Examples from real life
+***********************
+Everblog_ is a personal blogging platform taking advantage of evernote, it chooses quick_orm as its ORM framework. Refer to `everblog's database model file`_ for more detail.
+
+.. _Everblog: https://github.com/tylerlong/everblog
+.. _`everblog's database model file`: https://github.com/tylerlong/everblog/blob/master/everblog/models.py
+
+If you know any other successful stories about quick_orm, do tell me and I will list them here. 
+   
   
 
 
 Where to learn more about quick_orm?
 ************************************
-As said above, quick_orm is built upon SQLAlchemy. Quick ORM never tries to hide SQLAlchemy's flexibility and power. 
-Everything availiable in SQLAlchemy is still available in quick_orm. 
+As said above, quick_orm is built upon SQLAlchemy. Quick ORM never tries to hide SQLAlchemy's flexibility and power. Everything availiable in SQLAlchemy is still available in quick_orm. 
+
 So please read the documents of SQLAlchemy, you would learn much more there than you could here.  
+
 Read quick_orm's source code, try to improve it.
 
 
@@ -472,19 +500,19 @@ Read quick_orm's source code, try to improve it.
 You wanna involve? 
 ******************
 Quick ORM is released under BSD lisence.
+
 The source code is hosted on github: https://github.com/tylerlong/quick_orm
 
 
 
 Acknowledgements
 ****************
-Quick ORM is built upon SQLAlchemy - the famous Python SQL Toolkit and Object Relational Mapper. 
-All of the glory belongs to the SQLAlchemy development team and the SQLAlchemy community! 
-My contribution to Quich ORM becomes trivial compared with theirs( to SQLAlchemy).
+Quick ORM is built upon SQLAlchemy - the famous Python SQL Toolkit and Object Relational Mapper. All of the glory belongs to the SQLAlchemy development team and the SQLAlchemy community! My contribution to Quich ORM becomes trivial compared with theirs( to SQLAlchemy).
 
 
 
 Feedback 
 ********
 Comments, suggestions, questions, free beer, t-shirts, kindles, ipads ... are all welcome! 
+
 Email: quick.orm.feedback@gmail.com 

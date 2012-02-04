@@ -60,8 +60,7 @@ class Database(object):
 Please specify something like '?charset=utf8' explicitly.""")
 
         self.engine = create_engine(connection_string, convert_unicode = True, encoding = 'utf-8')
-        self.session = scoped_session(sessionmaker(autocommit = False, autoflush = False, bind = self.engine))        
-        self.session = SessionExtension.extend(self.session) # extend session to add some shortcut methods    
+        self.session = SessionExtension.extend(scoped_session(sessionmaker(autocommit = False, autoflush = False, bind = self.engine)))        
 
     @staticmethod
     def foreign_key(ref_model, ref_name = None, backref_name = None, one_to_one = False):
@@ -107,7 +106,6 @@ Please specify something like '?charset=utf8' explicitly.""")
                 backref = backref(my_backref_name, **backref_options), remote_side = '{0}.id'.format(ref_model_name)))
             return cls
         return ref_table
-
 
     @staticmethod
     def many_to_many(ref_model, ref_name = None, backref_name = None, middle_table_name = None):

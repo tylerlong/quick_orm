@@ -5,7 +5,7 @@ from quick_orm.examples import examples_list, examples_dict
 def read_examples():
     result = ''
     for example_file in examples_list:
-        result = '{0}{1} example\r\n{2}\r\n    {3}\r\n\r\n\r\n'.format(result, examples_dict[example_file], 
+        result = '{0}{1} example\r\n{2}\r\n\r\n::\r\n\r\n    {3}\r\n\r\n'.format(result, examples_dict[example_file], 
             '*' * (len(examples_dict[example_file]) + 8),
             '\r\n    '.join(open('quick_orm/examples/{0}.py'.format(example_file)).read().splitlines()))
     return result.rstrip()
@@ -16,11 +16,10 @@ with open('README_template', 'r') as file:
 readme = readme.replace('{{ examples }}', read_examples())
 with open('requires.txt', 'r') as file:
     text = file.read().rstrip()
-    readme = readme.replace('{{ requires }}', text)
     requirements = text.splitlines()
 with open('quick_orm/core.py', 'r') as file:
     readme = readme.replace('{{ lines_count }}', str(len(file.read().splitlines())))
-with open('README', 'w') as file:
+with open('README.rst', 'w') as file:
     file.write(readme)
 
 

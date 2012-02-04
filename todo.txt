@@ -1,25 +1,7 @@
 10. full text search. (class decorator for model?)
 
-12. fomal docs, including a comprehensive example
-
-19. _avatar = Column('avatar', LargeBinary)
-    def get_avatar(self):
-        if not self._avatar:
-            return default_avatar
-    def set_avatar(self, data):
-        self._avatar = data
-    avatar = property(get_avatar, set_avatar)
-
-    equivalent to  "avatar = Column(LargeBinary, default = default_avatar)"
-    but the default value isn't saved to database, preferred.
-    there should be a convenient way to do this. (preferrablly by one line of code)
-
-25. move content in __init__() to DatabaseExtension?
-
 26. orm for nosql? such as this one: http://qslack.com/projects/rhino-a-ruby-hbase-orm/
 
 27. ref_grandchildren can't access ref some attributes of grandchildren. for example: everblog project: tag.blog_entrys.lang report an error.
-
-28. add everblog as a real life example to README
 
 30. 

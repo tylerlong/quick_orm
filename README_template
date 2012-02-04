@@ -3,13 +3,15 @@ Quick ORM
 =========
 
 
-***Notice***: upgrading to quick_orm 0.3.x from previous versions requires adding one line of code: "Database.register()". Please refer to the examples. 
+**News**: quick_orm is fully compatible with the newest SQLAlchemy 0.7.5.
 
 
 Introduction
 ************
 A python ORM which enables you to get started in less than a minute! 
+
 Super easy to setup and super easy to use, yet super powerful! 
+
 You would regret that you didn't discorver it earlier!
 
 
@@ -29,20 +31,14 @@ Features
 
 
 
-Prerequisites 
-*************
-You need Python 2.6 or above. It does NOT support Python 3 yet.
-{{ requires }}
-If you are using pip to manage python packages, you don't have to install the prerequisites separately, they will be installed automatically.
-       
+Quick Start 
+***********
 
+::
 
-How to install or upgrade ? 
-***************************
-Just one command:  
-    pip install --upgrade quick_orm    
-Alternatively you could download the source code and issue command: python setup.py install 
-If you choose to install from source code, you have to install the prerequisites manually.
+    pip install quick_orm    
+
+Refer to the following examples to write your own database manipulation code.
 
 
 
@@ -50,18 +46,24 @@ If you choose to install from source code, you have to install the prerequisites
 
 
 
-More examples
-*************
-More examples could be found in folder site-packages/quick_orm/examples/
-And even more examples are being added   
+Examples from real life
+***********************
+Everblog_ is a personal blogging platform taking advantage of evernote, it chooses quick_orm as its ORM framework. Refer to `everblog's database model file`_ for more detail.
+
+.. _Everblog: https://github.com/tylerlong/everblog
+.. _`everblog's database model file`: https://github.com/tylerlong/everblog/blob/master/everblog/models.py
+
+If you know any other successful stories about quick_orm, do tell me and I will list them here. 
+   
   
 
 
 Where to learn more about quick_orm?
 ************************************
-As said above, quick_orm is built upon SQLAlchemy. Quick ORM never tries to hide SQLAlchemy's flexibility and power. 
-Everything availiable in SQLAlchemy is still available in quick_orm. 
+As said above, quick_orm is built upon SQLAlchemy. Quick ORM never tries to hide SQLAlchemy's flexibility and power. Everything availiable in SQLAlchemy is still available in quick_orm. 
+
 So please read the documents of SQLAlchemy, you would learn much more there than you could here.  
+
 Read quick_orm's source code, try to improve it.
 
 
@@ -69,19 +71,19 @@ Read quick_orm's source code, try to improve it.
 You wanna involve? 
 ******************
 Quick ORM is released under BSD lisence.
+
 The source code is hosted on github: https://github.com/tylerlong/quick_orm
 
 
 
 Acknowledgements
 ****************
-Quick ORM is built upon SQLAlchemy - the famous Python SQL Toolkit and Object Relational Mapper. 
-All of the glory belongs to the SQLAlchemy development team and the SQLAlchemy community! 
-My contribution to Quich ORM becomes trivial compared with theirs( to SQLAlchemy).
+Quick ORM is built upon SQLAlchemy - the famous Python SQL Toolkit and Object Relational Mapper. All of the glory belongs to the SQLAlchemy development team and the SQLAlchemy community! My contribution to Quich ORM becomes trivial compared with theirs( to SQLAlchemy).
 
 
 
 Feedback 
 ********
 Comments, suggestions, questions, free beer, t-shirts, kindles, ipads ... are all welcome! 
+
 Email: quick.orm.feedback@gmail.com 
