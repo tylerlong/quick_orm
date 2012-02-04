@@ -5,7 +5,7 @@ from quick_orm.examples import examples_list, examples_dict
 def read_examples():
     result = ''
     for example_file in examples_list:
-        result = '{0}{1} example\r\n{2}\r\n\r\n::\r\n\r\n    {3}\r\n\r\n'.format(result, examples_dict[example_file], 
+        result = '{0}\r\n|\r\n\r\n{1} example\r\n{2}\r\n\r\n::\r\n\r\n    {3}\r\n\r\n'.format(result, examples_dict[example_file], 
             '*' * (len(examples_dict[example_file]) + 8),
             '\r\n    '.join(open('quick_orm/examples/{0}.py'.format(example_file)).read().splitlines()))
     return result.rstrip()

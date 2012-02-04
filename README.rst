@@ -6,6 +6,8 @@ Quick ORM
 **News**: quick_orm is fully compatible with the newest SQLAlchemy 0.7.5.
 
 
+|
+
 Introduction
 ************
 A python ORM which enables you to get started in less than a minute! 
@@ -15,21 +17,23 @@ Super easy to setup and super easy to use, yet super powerful!
 You would regret that you didn't discorver it earlier!
 
 
+|
 
 Features
 ********
- - quick: you could get and play with it in less than a minute. It couldn't be more straightforward.
- - easy: you don't have to write any SQL statements, including those "create table xxx ..." ones.
- - simple: the core code counts only 208 lines including comments and pydocs, there is no room for bugs.
- - free: released under BSD license, you are free to use it and distribute it.
- - powerful: built upon SQLAlchemy and doesn't compromise its power.
- - support relationships by means of python decorators.
- - support table inheritance in a most natural way.
- - support multiple databases: you can map your models to many databases without difficulty.
- - write less, do more: taking advantage of python metaclass reduces data modeling code dramatically.
- - long-term maintained: Continous efforts are taken to improve and maintain it.
+- quick: you could get and play with it in less than a minute. It couldn't be more straightforward.
+- easy: you don't have to write any SQL statements, including those "create table xxx ..." ones.
+- simple: the core code counts only 208 lines including comments and pydocs, there is no room for bugs.
+- free: released under BSD license, you are free to use it and distribute it.
+- powerful: built upon SQLAlchemy and doesn't compromise its power.
+- support relationships by means of python decorators.
+- support table inheritance in a most natural way.
+- support multiple databases: you can map your models to many databases without difficulty.
+- write less, do more: taking advantage of python metaclass reduces data modeling code dramatically.
+- long-term maintained: Continous efforts are taken to improve and maintain it.
 
 
+|
 
 Quick Start 
 ***********
@@ -41,6 +45,7 @@ Quick Start
 Refer to the following examples to write your own database manipulation code.
 
 
+|
 
 Hello World example
 *******************
@@ -66,6 +71,9 @@ Hello World example
         
         user = db.session.query(User).get(1)
         print 'My name is', user.name
+
+
+|
 
 Foreign key example
 *******************
@@ -99,6 +107,9 @@ Foreign key example
         print 'The question is:', question.title
         print 'The answer is:', question.answers.first().content
 
+
+|
+
 Foreign key options example
 ***************************
 
@@ -131,6 +142,9 @@ Foreign key options example
         print 'The question is:', question.title
         print 'The answer is:', question.answers.first().content
 
+
+|
+
 Foreign key to oneself example
 ******************************
 
@@ -159,6 +173,9 @@ Foreign key to oneself example
         root_node = db.session.query(Node).filter_by(name = 'root').one()
         print 'Root node have {0} children nodes, they are {1}'\
             .format(root_node.children_nodes.count(), ', '.join(node.name for node in root_node.children_nodes))
+
+
+|
 
 Many-to-many relationship example
 *********************************
@@ -191,6 +208,9 @@ Many-to-many relationship example
         admin_role = db.session.query(Role).filter_by(name = 'Administrator').one()
         print ', '.join([user.name for user in admin_role.users]), 'are admintrators'
 
+
+|
+
 Many-to-many relationship options example
 *****************************************
 
@@ -222,6 +242,9 @@ Many-to-many relationship options example
         admin_role = db.session.query(Role).filter_by(name = 'Administrator').one()
         print ', '.join([user.name for user in admin_role.users]), 'are admintrators'
 
+
+|
+
 Many-to-many relationship with oneself example
 **********************************************
 
@@ -252,6 +275,9 @@ Many-to-many relationship with oneself example
         print 'People who are following Tyler Long:', ', '.join(user.name for user in tyler.users_follow_me)
         mark = db.session.query(User).filter_by(name = 'Mark Wong').one()
         print 'Mark Wong is following:', ', '.join(user.name for user in mark.users_i_follow)
+
+
+|
 
 One-to-one relationship example
 *******************************
@@ -285,6 +311,9 @@ One-to-one relationship example
         print 'User:', user.name
         print 'Email:', user.contact.email
         print 'Address:', user.contact.address
+
+
+|
 
 Multiple foreign keys example
 *****************************
@@ -322,6 +351,9 @@ Multiple foreign keys example
         print 'Author:', article.author.name
         print 'Editor:', article.editor.name
 
+
+|
+
 Performing raw sql query example
 ********************************
 
@@ -343,6 +375,9 @@ Performing raw sql query example
         
         count = db.engine.execute('select count(name) from user').scalar()
         print 'There are {0} users in total'.format(count)
+
+
+|
 
 Multiple databases example
 **************************
@@ -373,6 +408,9 @@ Multiple databases example
         
         print 'I am', db1.session.query(User).get(1).name
         print 'I am', db2.session.query(User).get(1).name
+
+
+|
 
 Table inheritance example
 *************************
@@ -440,6 +478,9 @@ Table inheritance example
         tag = db.session.query(Tag).filter_by(name = 'quick_orm').first()
         print '{0} questions are tagged "quick_orm"'.format(tag.questions.count())
 
+
+|
+
 MetaBuilder to avoid duplicate code example
 *******************************************
 
@@ -474,18 +515,19 @@ MetaBuilder to avoid duplicate code example
         print group.name, group.created
 
 
+|
 
 Examples from real life
 ***********************
-Everblog_ is a personal blogging platform taking advantage of evernote, it chooses quick_orm as its ORM framework. Refer to `everblog's database model file`_ for more detail.
+- Everblog_ is a personal blogging platform taking advantage of evernote, it chooses quick_orm as its ORM framework. Refer to `everblog's database model file`_ for more detail.
 
 .. _Everblog: https://github.com/tylerlong/everblog
 .. _`everblog's database model file`: https://github.com/tylerlong/everblog/blob/master/everblog/models.py
 
-If you know any other successful stories about quick_orm, do tell me and I will list them here. 
+If you know any other successful stories about quick_orm, do tell me and I will list them above. 
    
   
-
+|
 
 Where to learn more about quick_orm?
 ************************************
@@ -496,6 +538,7 @@ So please read the documents of SQLAlchemy, you would learn much more there than
 Read quick_orm's source code, try to improve it.
 
 
+|
 
 You wanna involve? 
 ******************
@@ -504,12 +547,14 @@ Quick ORM is released under BSD lisence.
 The source code is hosted on github: https://github.com/tylerlong/quick_orm
 
 
+|
 
 Acknowledgements
 ****************
 Quick ORM is built upon SQLAlchemy - the famous Python SQL Toolkit and Object Relational Mapper. All of the glory belongs to the SQLAlchemy development team and the SQLAlchemy community! My contribution to Quich ORM becomes trivial compared with theirs( to SQLAlchemy).
 
 
+|
 
 Feedback 
 ********
