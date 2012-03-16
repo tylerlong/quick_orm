@@ -3,7 +3,7 @@ Quick ORM
 =========
 
 
-**News**: quick_orm is fully compatible with the newest SQLAlchemy 0.7.5.
+**News**: quick_orm is fully compatible with the newest SQLAlchemy 0.7.6.
 
 
 |
