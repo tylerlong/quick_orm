@@ -2,6 +2,8 @@
 
 26. orm for nosql? such as this one: http://qslack.com/projects/rhino-a-ruby-hbase-orm/
 
-27. ref_grandchildren can't access ref some attributes of grandchildren. for example: everblog project: tag.blog_entrys.lang report an error.
+27. ref_grandchildren can't access some attributes of grandchildren. for example: everblog project: tag.blog_entrys.lang report an error.
 
-30. 
+30. generate visual charts according to model. It is good for analyzing and demonstrating. Maybe I can take advantage of existing functionalities of some databases. I know mysql workbench is able to generate chart.
+
+31. 
