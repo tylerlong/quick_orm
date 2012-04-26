@@ -6,4 +6,8 @@
 
 30. generate visual charts according to model. It is good for analyzing and demonstrating. Maybe I can take advantage of existing functionalities of some databases. I know mysql workbench is able to generate chart.
 
-31. 
+31. make many_to_one a synonym for foreign_key
+
+32. add one_to_many ?
+
+33.
