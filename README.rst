@@ -62,12 +62,12 @@ Hello World example
     Database.register()
     
     if __name__ == '__main__':
-        db = Database('sqlite://')
+        db = Database('sqlite://') # database urls: http://docs.sqlalchemy.org/en/latest/core/engines.html#database-urls
         db.create_tables()
-        
+    
         user = User(name = 'Hello World')
         db.session.add_then_commit(user)
-        
+    
         user = db.session.query(User).get(1)
         print 'My name is', user.name
 
