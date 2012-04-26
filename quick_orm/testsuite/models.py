@@ -25,7 +25,7 @@ class Group(object):
     name = Column(String(36), nullable = False, unique = True)
 
 
-@Database.foreign_key(User, backref_name = 'blog_entries')
+@Database.many_to_one(User, backref_name = 'blog_entries')
 class BlogEntry(object):
     __metaclass__ = metaclass
     title = Column(String(64), nullable = False)
@@ -37,7 +37,7 @@ class Topic(object):
     name = Column(String(64), nullable = False)
 
 
-@Database.foreign_key(User)
+@Database.many_to_one(User)
 class Post(object):
     __metaclass__ = metaclass
     content = Column(Text)

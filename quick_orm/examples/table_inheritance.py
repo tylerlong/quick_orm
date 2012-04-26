@@ -6,25 +6,25 @@ __metaclass__ = Database.DefaultMeta
 class User:
     name = Column(String(70))
 
-@Database.foreign_key(User)
+@Database.many_to_one(User)
 class Post:
     content = Column(Text)
 
 class Question(Post):
-    title = Column(String(70))    
+    title = Column(String(70))
 
-@Database.foreign_key(Question)
+@Database.many_to_one(Question)
 class Answer(Post):
     pass
 
-@Database.foreign_key(Post)
+@Database.many_to_one(Post)
 class Comment(Post):
     pass
 
 @Database.many_to_many(Post)
 class Tag:
     name = Column(String(70))
-    
+
 Database.register()
 
 if __name__ == '__main__':
@@ -33,16 +33,16 @@ if __name__ == '__main__':
 
     user1 = User(name = 'Tyler Long')
     user2 = User(name = 'Peter Lau')
-    
+
     tag1 = Tag(name = 'quick_orm')
     tag2 = Tag(name = 'nice')
-    
-    question = Question(user = user1, title = 'What is quick_orm ?', content = 'What is quick_orm ?', tags = [tag1, ])
-    question2 = Question(user = user1, title = 'Have you tried quick_orm ?', content = 'Have you tried quick_orm ?', tags = [tag1, ])
+
+    question = Question(user = user1, title = 'What is quick_orm?', content = 'What is quick_orm?', tags = [tag1, ])
+    question2 = Question(user = user1, title = 'Have you tried quick_orm?', content = 'Have you tried quick_orm?', tags = [tag1, ])
 
     answer = Answer(user = user1, question = question, tags = [tag1, ],
-        content = 'quick_orm is a python ORM which enables you to get started in less than a minute!')
-    
+        content = 'quick_orm is a Python ORM framework which enables you to get started in less than a minute!')
+
     comment1 = Comment(user = user2, content = 'good question', post = question)
     comment2 = Comment(user = user2, content = 'nice answer', post = answer, tags = [tag2, ])
 
@@ -50,8 +50,8 @@ if __name__ == '__main__':
 
     question = db.session.query(Question).get(1)
     print 'tags for question "{0}": "{1}"'.format(question.title, ', '.join(tag.name for tag in question.tags))
-    print 'new comment on question:', question.comments.first().content
-    print 'new comment on answer:', question.answers.first().comments.first().content
+    print 'new comment for question:', question.comments.first().content
+    print 'new comment for answer:', question.answers.first().comments.first().content
 
     user = db.session.query(User).filter_by(name = 'Peter Lau').one()
     print 'Peter Lau has posted {0} comments'.format(user.comments.count())

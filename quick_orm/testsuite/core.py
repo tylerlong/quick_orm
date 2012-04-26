@@ -17,8 +17,8 @@ class CoreTestCase(unittest.TestCase):
     def tearDown(self):
         db.session.remove()
 
-    def test_foreign_key(self):
-        """Test foreign_key relationship"""
+    def test_many_to_one(self):
+        """Test many_to_one relationship"""
         user = db.session.query(User).filter_by(name = 'simon').first()
         assert user
         assert user.blog_entries.count() > 0
@@ -32,9 +32,9 @@ class CoreTestCase(unittest.TestCase):
         assert user.groups.first().users.count() > 0
         assert any(u.name == 'simon' for u in user.groups.first().users)
 
-    def test_foreign_key_cascade(self):
-        """Test cascade in a foreign_key relationship.
-        When record from the one side gets deleted, 
+    def test_many_to_one_cascade(self):
+        """Test cascade in a many_to_one relationship.
+        When record from the one side gets deleted,
         records from the many side are deleted automatically.
         Make sure no ignorant records are deleted.
         """
@@ -55,8 +55,8 @@ class CoreTestCase(unittest.TestCase):
 
     def test_many_to_many_cascade(self):
         """Test cascade in a many_to_many relationship.
-        when record from either side gets deleted, 
-        records from the middle table are deleted automatically, 
+        when record from either side gets deleted,
+        records from the middle table are deleted automatically,
         records from the other side retain.
         make sure no ignorant records are deleted.
         """
@@ -66,7 +66,7 @@ class CoreTestCase(unittest.TestCase):
         group_count = group_query.count()
         middle_query_str = 'select count(*) from user_group'
         middle_count = db.engine.execute(middle_query_str).scalar()
-        
+
         user = db.session.query(User).filter_by(name = 'tyler').first()
         assert user
         user_middle_count = db.engine.execute('select count(*) from user_group where user_id={0}'.format(user.id)).scalar()

@@ -7,7 +7,7 @@ class Question:
     title = Column(String(70))
     content = Column(Text)
 
-@Database.foreign_key(Question)
+@Database.many_to_one(Question)
 class Answer:
     content = Column(Text)
 
@@ -16,11 +16,11 @@ Database.register()
 if __name__ == '__main__':
     db = Database('sqlite://')
     db.create_tables()
-    
-    question = Question(title = 'What is Quick ORM ?', content = 'What is Quick ORM ?')
-    answer = Answer(question = question, content = 'Quick ORM is a python ORM which enables you to get started in less than a minute!')
+
+    question = Question(title = 'What is quick_orm?', content = 'What is quick_orm?')
+    answer = Answer(question = question, content = 'quick_orm is a Python ORM framework which enables you to get started in less than a minute!')
     db.session.add_then_commit(answer)
-    
+
     question = db.session.query(Question).get(1)
     print 'The question is:', question.title
     print 'The answer is:', question.answers.first().content

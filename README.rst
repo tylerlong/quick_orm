@@ -22,7 +22,7 @@ Features
 ********
 - quick: you could get and play with it in less than a minute. It couldn't be more straightforward.
 - easy: you don't have to write any SQL statements, including those "create table xxx ..." ones.
-- simple: the core code counts only 208 lines including comments and pydocs, there is no room for bugs.
+- simple: the core code counts only 216 lines including comments and pydocs, there is no room for bugs.
 - free: released under BSD license, you are free to use it and distribute it.
 - powerful: built upon SQLAlchemy and doesn't compromise its power.
 - support relationships by means of python decorators.
@@ -74,8 +74,8 @@ Hello World example
 
 |
 
-Foreign key example
-*******************
+Many-to-one relationship example
+********************************
 
 ::
 
@@ -88,7 +88,7 @@ Foreign key example
         title = Column(String(70))
         content = Column(Text)
     
-    @Database.foreign_key(Question)
+    @Database.many_to_one(Question)
     class Answer:
         content = Column(Text)
     
@@ -97,11 +97,11 @@ Foreign key example
     if __name__ == '__main__':
         db = Database('sqlite://')
         db.create_tables()
-        
-        question = Question(title = 'What is Quick ORM ?', content = 'What is Quick ORM ?')
-        answer = Answer(question = question, content = 'Quick ORM is a python ORM which enables you to get started in less than a minute!')
+    
+        question = Question(title = 'What is quick_orm?', content = 'What is quick_orm?')
+        answer = Answer(question = question, content = 'quick_orm is a Python ORM framework which enables you to get started in less than a minute!')
         db.session.add_then_commit(answer)
-        
+    
         question = db.session.query(Question).get(1)
         print 'The question is:', question.title
         print 'The answer is:', question.answers.first().content
@@ -109,8 +109,8 @@ Foreign key example
 
 |
 
-Foreign key options example
-***************************
+Many-to-one relationship options example
+****************************************
 
 ::
 
@@ -123,7 +123,7 @@ Foreign key options example
         title = Column(String(70))
         content = Column(Text)
     
-    @Database.foreign_key(Question, ref_name = 'question', backref_name = 'answers')
+    @Database.many_to_one(Question, ref_name = 'question', backref_name = 'answers')
     class Answer:
         content = Column(Text)
     
@@ -132,11 +132,11 @@ Foreign key options example
     if __name__ == '__main__':
         db = Database('sqlite://')
         db.create_tables()
-        
-        question = Question(title = 'What is Quick ORM ?', content = 'What is Quick ORM ?')
-        answer = Answer(question = question, content = 'Quick ORM is a python ORM which enables you to get started in less than a minute!')
+    
+        question = Question(title = 'What is quick_orm?', content = 'What is quick_orm?')
+        answer = Answer(question = question, content = 'quick_orm is a Python ORM framework which enables you to get started in less than a minute!')
         db.session.add_then_commit(answer)
-        
+    
         question = db.session.query(Question).get(1)
         print 'The question is:', question.title
         print 'The answer is:', question.answers.first().content
@@ -144,8 +144,8 @@ Foreign key options example
 
 |
 
-Foreign key to oneself example
-******************************
+Many-to-one relationship with oneself example
+*********************************************
 
 ::
 
@@ -154,7 +154,7 @@ Foreign key to oneself example
     
     __metaclass__ = Database.DefaultMeta
     
-    @Database.foreign_key('Node', ref_name = 'parent_node', backref_name = 'children_nodes')
+    @Database.many_to_one('Node', ref_name = 'parent_node', backref_name = 'children_nodes')
     class Node:
         name = Column(String(70))
     
@@ -170,7 +170,7 @@ Foreign key to oneself example
         db.session.add_then_commit(root_node)
     
         root_node = db.session.query(Node).filter_by(name = 'root').one()
-        print 'Root node have {0} children nodes, they are {1}'\
+        print 'Root node has {0} children nodes, they are {1}'\
             .format(root_node.children_nodes.count(), ', '.join(node.name for node in root_node.children_nodes))
 
 
@@ -198,14 +198,14 @@ Many-to-many relationship example
     if __name__ == '__main__':
         db = Database('sqlite://')
         db.create_tables()
-        
+    
         user1 = User(name = 'Tyler Long')
         user2 = User(name = 'Peter Lau')
         role = Role(name = 'Administrator', users = [user1, user2])
         db.session.add_then_commit(role)
     
         admin_role = db.session.query(Role).filter_by(name = 'Administrator').one()
-        print ', '.join([user.name for user in admin_role.users]), 'are admintrators'
+        print ', '.join([user.name for user in admin_role.users]), 'are administrators'
 
 
 |
@@ -232,14 +232,14 @@ Many-to-many relationship options example
     if __name__ == '__main__':
         db = Database('sqlite://')
         db.create_tables()
-        
+    
         user1 = User(name = 'Tyler Long')
         user2 = User(name = 'Peter Lau')
         role = Role(name = 'Administrator', users = [user1, user2])
         db.session.add_then_commit(role)
     
         admin_role = db.session.query(Role).filter_by(name = 'Administrator').one()
-        print ', '.join([user.name for user in admin_role.users]), 'are admintrators'
+        print ', '.join([user.name for user in admin_role.users]), 'are administrators'
 
 
 |
@@ -291,7 +291,7 @@ One-to-one relationship example
     class User:
         name = Column(String(30))
     
-    @Database.foreign_key(User, one_to_one = True)
+    @Database.one_to_one(User)
     class Contact:
         email = Column(String(70))
         address = Column(String(70))
@@ -305,7 +305,7 @@ One-to-one relationship example
         contact = Contact(email = 'quick.orm.feedback@gmail.com', address = 'Shenzhen, China')
         user = User(name = 'Tyler Long', contact = contact)
         db.session.add_then_commit(user)
-        
+    
         user = db.session.query(User).get(1)
         print 'User:', user.name
         print 'Email:', user.contact.email
@@ -314,8 +314,8 @@ One-to-one relationship example
 
 |
 
-Multiple foreign keys example
-*****************************
+Multiple many-to-one relationships example
+******************************************
 
 ::
 
@@ -327,8 +327,8 @@ Multiple foreign keys example
     class User:
         name = Column(String(30))
     
-    @Database.foreign_key(User, ref_name = 'author', backref_name = 'articles_authored')
-    @Database.foreign_key(User, ref_name = 'editor', backref_name = 'articles_edited')
+    @Database.many_to_one(User, ref_name = 'author', backref_name = 'articles_authored')
+    @Database.many_to_one(User, ref_name = 'editor', backref_name = 'articles_edited')
     class Article:
         title = Column(String(80))
         content = Column(Text)
@@ -338,13 +338,13 @@ Multiple foreign keys example
     if __name__ == '__main__':
         db = Database('sqlite://')
         db.create_tables()
-        
+    
         author = User(name = 'Tyler Long')
         editor = User(name = 'Peter Lau')
-        article = Article(author = author, editor = editor, title = 'Quick ORM is super quick and easy', 
-            content = 'Quick ORM is super quick and easy. Believe it or not.')
+        article = Article(author = author, editor = editor, title = 'quick_orm is super quick and easy',
+            content = 'quick_orm is super quick and easy. Believe it or not.')
         db.session.add_then_commit(article)
-        
+    
         article = db.session.query(Article).get(1)
         print 'Article:', article.title
         print 'Author:', article.author.name
@@ -424,25 +424,25 @@ Table inheritance example
     class User:
         name = Column(String(70))
     
-    @Database.foreign_key(User)
+    @Database.many_to_one(User)
     class Post:
         content = Column(Text)
     
     class Question(Post):
-        title = Column(String(70))    
+        title = Column(String(70))
     
-    @Database.foreign_key(Question)
+    @Database.many_to_one(Question)
     class Answer(Post):
         pass
     
-    @Database.foreign_key(Post)
+    @Database.many_to_one(Post)
     class Comment(Post):
         pass
     
     @Database.many_to_many(Post)
     class Tag:
         name = Column(String(70))
-        
+    
     Database.register()
     
     if __name__ == '__main__':
@@ -451,16 +451,16 @@ Table inheritance example
     
         user1 = User(name = 'Tyler Long')
         user2 = User(name = 'Peter Lau')
-        
+    
         tag1 = Tag(name = 'quick_orm')
         tag2 = Tag(name = 'nice')
-        
-        question = Question(user = user1, title = 'What is quick_orm ?', content = 'What is quick_orm ?', tags = [tag1, ])
-        question2 = Question(user = user1, title = 'Have you tried quick_orm ?', content = 'Have you tried quick_orm ?', tags = [tag1, ])
+    
+        question = Question(user = user1, title = 'What is quick_orm?', content = 'What is quick_orm?', tags = [tag1, ])
+        question2 = Question(user = user1, title = 'Have you tried quick_orm?', content = 'Have you tried quick_orm?', tags = [tag1, ])
     
         answer = Answer(user = user1, question = question, tags = [tag1, ],
-            content = 'quick_orm is a python ORM which enables you to get started in less than a minute!')
-        
+            content = 'quick_orm is a Python ORM framework which enables you to get started in less than a minute!')
+    
         comment1 = Comment(user = user2, content = 'good question', post = question)
         comment2 = Comment(user = user2, content = 'nice answer', post = answer, tags = [tag2, ])
     
@@ -468,8 +468,8 @@ Table inheritance example
     
         question = db.session.query(Question).get(1)
         print 'tags for question "{0}": "{1}"'.format(question.title, ', '.join(tag.name for tag in question.tags))
-        print 'new comment on question:', question.comments.first().content
-        print 'new comment on answer:', question.answers.first().comments.first().content
+        print 'new comment for question:', question.comments.first().content
+        print 'new comment for answer:', question.answers.first().comments.first().content
     
         user = db.session.query(User).filter_by(name = 'Peter Lau').one()
         print 'Peter Lau has posted {0} comments'.format(user.comments.count())

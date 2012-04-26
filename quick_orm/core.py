@@ -2,7 +2,7 @@
 """
     quick_orm.core
     ~~~~~~~~~~~~~~
-    Core of Quick ORM
+    Core of quick_orm
 """
 from toolkit_library.string_util import StringUtil
 from sqlalchemy import create_engine, Column, Integer, ForeignKey, String
@@ -24,7 +24,7 @@ class MyDeclarativeMeta(DeclarativeMeta):
 class Database(object):
     """Represent a connection to a specific database"""
 
-    Base = declarative_base() 
+    Base = declarative_base()
 
     @staticmethod
     def register():
@@ -40,13 +40,13 @@ class Database(object):
                     continue
                 parent = models[j]
                 for grandparent in parent._many_to_models:
-                    setattr(grandparent, model._readable_names, 
+                    setattr(grandparent, model._readable_names,
                         (lambda parent, model: property(lambda self: getattr(self, parent._readable_names)
                         .filter_by(real_type = model._readable_name)))(parent, model))
 
                 for grandparent in parent._one_to_models:
-                    setattr(grandparent, model._readable_name, 
-                        (lambda parent, model: property(lambda self: getattr(self, parent._readable_name) 
+                    setattr(grandparent, model._readable_name,
+                        (lambda parent, model: property(lambda self: getattr(self, parent._readable_name)
                             if getattr(self, parent._readable_name).real_type == model._readable_name else None))(parent, model))
         models[:] = []
 
@@ -56,11 +56,11 @@ class Database(object):
         # Solve an issue with mysql character encoding(maybe it's a bug of MySQLdb)
         # Refer to http://plone.293351.n2.nabble.com/Troubles-with-encoding-SQLAlchemy-MySQLdb-or-mysql-configuration-pb-td4827540.html
         if 'mysql:' in connection_string and 'charset=' not in connection_string:
-            raise ValueError("""No charset was specified for a mysql connection string. 
+            raise ValueError("""No charset was specified for a mysql connection string.
 Please specify something like '?charset=utf8' explicitly.""")
 
         self.engine = create_engine(connection_string, convert_unicode = True, encoding = 'utf-8')
-        self.session = SessionExtension.extend(scoped_session(sessionmaker(autocommit = False, autoflush = False, bind = self.engine)))        
+        self.session = SessionExtension.extend(scoped_session(sessionmaker(autocommit = False, autoflush = False, bind = self.engine)))
 
     @staticmethod
     def foreign_key(ref_model, ref_name = None, backref_name = None, one_to_one = False):
@@ -77,7 +77,7 @@ Please specify something like '?charset=utf8' explicitly.""")
             ref_model_name = ref_model.__name__
         ref_table_name = StringUtil.camelcase_to_underscore(ref_model_name)
         ref_name = ref_name or ref_table_name
-        foreign_key = '{0}_id'.format(ref_name)        
+        foreign_key = '{0}_id'.format(ref_name)
         def ref_table(cls):
             if one_to_one:
                 if backref_name:
@@ -89,7 +89,7 @@ Please specify something like '?charset=utf8' explicitly.""")
                     ref_model._one_to_models.append(cls)
             else:
                 if backref_name:
-                    cls._readable_names = backref_name                
+                    cls._readable_names = backref_name
                 if not isinstance(ref_model, str):
                     if ref_name:
                         ref_model._readable_name = ref_name
@@ -101,11 +101,19 @@ Please specify something like '?charset=utf8' explicitly.""")
             my_backref_name = backref_name or (table_name if one_to_one else '{0}s'.format(table_name))
             backref_options = dict(uselist = False) if one_to_one else dict(lazy = 'dynamic')
             backref_options['cascade'] = 'all'
-            setattr(cls, ref_name, relationship(ref_model_name, 
-                primaryjoin = '{0}.{1} == {2}.id'.format(model_name, foreign_key, ref_model_name), 
+            setattr(cls, ref_name, relationship(ref_model_name,
+                primaryjoin = '{0}.{1} == {2}.id'.format(model_name, foreign_key, ref_model_name),
                 backref = backref(my_backref_name, **backref_options), remote_side = '{0}.id'.format(ref_model_name)))
             return cls
         return ref_table
+
+    @staticmethod
+    def many_to_one(ref_model, ref_name = None, backref_name = None):
+        return Database.foreign_key(ref_model, ref_name, backref_name, False)
+
+    @staticmethod
+    def one_to_one(ref_model, ref_name = None, backref_name = None):
+        return Database.foreign_key(ref_model, ref_name, backref_name, True)
 
     @staticmethod
     def many_to_many(ref_model, ref_name = None, backref_name = None, middle_table_name = None):
@@ -134,17 +142,17 @@ Please specify something like '?charset=utf8' explicitly.""")
             my_middle_table_name = middle_table_name or '{0}_{1}'.format(table_name, ref_table_name)
             if table_name == ref_table_name:
                 left_column_name = 'left_id'
-                right_column_name = 'right_id'                
+                right_column_name = 'right_id'
             else:
                 left_column_name = '{0}_id'.format(table_name)
-                right_column_name = '{0}_id'.format(ref_table_name)           
+                right_column_name = '{0}_id'.format(ref_table_name)
             middle_table = Table(my_middle_table_name, Database.Base.metadata,
                 Column(left_column_name, Integer, ForeignKey('{0}.id'.format(table_name), ondelete = "CASCADE"), primary_key = True),
                 Column(right_column_name, Integer, ForeignKey('{0}.id'.format(ref_table_name), ondelete = "CASCADE"), primary_key = True))
 
             my_backref_name = backref_name or '{0}s'.format(table_name)
             parameters = dict(secondary = middle_table, lazy = 'dynamic', backref = backref(my_backref_name, lazy = 'dynamic'))
-            if table_name == ref_table_name:             
+            if table_name == ref_table_name:
                 parameters['primaryjoin'] = cls.id == middle_table.c.left_id
                 parameters['secondaryjoin'] = cls.id == middle_table.c.right_id
 
@@ -161,12 +169,12 @@ Please specify something like '?charset=utf8' explicitly.""")
         def __new__(cls, name, bases, attrs):
             # add Database.Base as parent class
             bases = list(bases)
-            if object in bases: 
+            if object in bases:
                 bases.remove(object)
             bases.append(Database.Base)
             seen = set()
             bases = tuple(base for base in bases if not base in seen and not seen.add(base))
-            
+
             attrs['__tablename__'] = StringUtil.camelcase_to_underscore(name)
             attrs['id'] = Column(Integer, primary_key = True)
             attrs['_readable_name'] = attrs['__tablename__']
@@ -187,10 +195,10 @@ Please specify something like '?charset=utf8' explicitly.""")
                     attrs['__mapper_args__']['polymorphic_identity'] = attrs['_readable_name']
                     attrs['__mapper_args__']['inherit_condition'] = attrs['id'] == base.id
                 else:
-                    attrs['__mapper_args__'] = {'polymorphic_identity': attrs['_readable_name'], 'inherit_condition': attrs['id'] == base.id}          
-                    
-            return MyDeclarativeMeta.__new__(cls, name, bases, attrs)  
-    
+                    attrs['__mapper_args__'] = {'polymorphic_identity': attrs['_readable_name'], 'inherit_condition': attrs['id'] == base.id}
+
+            return MyDeclarativeMeta.__new__(cls, name, bases, attrs)
+
 
     @staticmethod
     def MetaBuilder(*models):
