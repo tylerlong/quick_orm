@@ -1,5 +1,5 @@
 =========
-Quick ORM
+quick_orm
 =========
 
 
@@ -10,9 +10,9 @@ Quick ORM
 
 Introduction
 ************
-A python ORM which enables you to get started in less than a minute! 
+Python ORM framework which enables you to get started in less than a minute!
 
-Super easy to setup and super easy to use, yet super powerful! 
+Super easy to setup and super easy to use, yet super powerful!
 
 You would regret that you didn't discorver it earlier!
 
@@ -35,12 +35,12 @@ Features
 
 |
 
-Quick Start 
+Quick Start
 ***********
 
 ::
 
-    pip install quick_orm    
+    pip install quick_orm
 
 Refer to the following examples to write your own database manipulation code.
 
@@ -524,25 +524,25 @@ Examples from real life
 .. _Everblog: https://github.com/tylerlong/everblog
 .. _`everblog's database model file`: https://github.com/tylerlong/everblog/blob/master/everblog/models.py
 
-If you know any other successful stories about quick_orm, do tell me and I will list them above. 
-   
-  
+If you know any other successful stories about quick_orm, do tell me and I will list them above.
+
+
 |
 
 Where to learn more about quick_orm?
 ************************************
-As said above, quick_orm is built upon SQLAlchemy. Quick ORM never tries to hide SQLAlchemy's flexibility and power. Everything availiable in SQLAlchemy is still available in quick_orm. 
+As said above, quick_orm is built upon SQLAlchemy. quick_orm never tries to hide SQLAlchemy's flexibility and power. Everything availiable in SQLAlchemy is still available in quick_orm.
 
-So please read the documents of SQLAlchemy, you would learn much more there than you could here.  
+So please read the documents of SQLAlchemy, you would learn much more there than you could here.
 
 Read quick_orm's source code, try to improve it.
 
 
 |
 
-You wanna involve? 
+You wanna involve?
 ******************
-Quick ORM is released under BSD lisence.
+quick_orm is released under BSD lisence.
 
 The source code is hosted on github: https://github.com/tylerlong/quick_orm
 
@@ -551,13 +551,13 @@ The source code is hosted on github: https://github.com/tylerlong/quick_orm
 
 Acknowledgements
 ****************
-Quick ORM is built upon SQLAlchemy - the famous Python SQL Toolkit and Object Relational Mapper. All of the glory belongs to the SQLAlchemy development team and the SQLAlchemy community! My contribution to Quich ORM becomes trivial compared with theirs( to SQLAlchemy).
+quick_orm is built upon SQLAlchemy - the famous Python SQL Toolkit and Object Relational Mapper. All of the glory belongs to the SQLAlchemy development team and the SQLAlchemy community! My contribution to Quich ORM becomes trivial compared with theirs( to SQLAlchemy).
 
 
 |
 
-Feedback 
+Feedback
 ********
-Comments, suggestions, questions, free beer, t-shirts, kindles, ipads ... are all welcome! 
+Comments, suggestions, questions, free beer, t-shirts, kindles, ipads ... are all welcome!
 
-Email: quick.orm.feedback@gmail.com 
+Email: quick.orm.feedback@gmail.com
