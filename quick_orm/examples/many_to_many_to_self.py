@@ -12,7 +12,7 @@ Database.register()
 if __name__ == '__main__':
     db = Database('sqlite://')
     db.create_tables()
-    
+
     peter = User(name = 'Peter Lau')
     mark = User(name = 'Mark Wong', users_i_follow = [peter, ])
     tyler = User(name = 'Tyler Long', users_i_follow = [peter, ], users_follow_me = [mark, ])

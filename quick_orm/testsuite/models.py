@@ -8,38 +8,30 @@ from quick_orm.core import Database
 from sqlalchemy import Column, String, Text, DateTime, func
 
 
-class DefaultModel(object):
-    created = Column(DateTime, default = func.now(), nullable = False)
-
-metaclass = Database.MetaBuilder(DefaultModel)
+__metaclass__ = Database.DefaultMeta
 
 
 @Database.many_to_many('Group')
-class User(object):
-    __metaclass__ = metaclass
+class User:
     name = Column(String(36), nullable = False, unique = True)
 
 
-class Group(object):
-    __metaclass__ = metaclass
+class Group:
     name = Column(String(36), nullable = False, unique = True)
 
 
 @Database.many_to_one(User, backref_name = 'blog_entries')
-class BlogEntry(object):
-    __metaclass__ = metaclass
+class BlogEntry:
     title = Column(String(64), nullable = False)
     content = Column(Text)
 
 
-class Topic(object):
-    __metaclass__ = metaclass
+class Topic:
     name = Column(String(64), nullable = False)
 
 
 @Database.many_to_one(User)
-class Post(object):
-    __metaclass__ = metaclass
+class Post:
     content = Column(Text)
 
 

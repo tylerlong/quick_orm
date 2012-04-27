@@ -3,7 +3,6 @@ from sqlalchemy import Column, String, DateTime, func
 
 class DefaultModel:
     name = Column(String(70))
-    created = Column(DateTime, default = func.now(), nullable = False)
 
 __metaclass__ = Database.MetaBuilder(DefaultModel)
 
@@ -23,5 +22,5 @@ if __name__ == '__main__':
     group = Group(name = 'python')
     db.session.add_then_commit(group)
 
-    print user.name, user.created
-    print group.name, group.created
+    print user.name
+    print group.name

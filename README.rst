@@ -70,7 +70,7 @@ Hello World example
     
         user = db.session.query(User).get(1)
         print 'My name is', user.name
-        print 'created_at', user.created_at
+        print 'created_at', user.created_at # created_at and updated_at timestamps are added automatically.
         print 'updated_at', user.updated_at
     
         user.name = 'Tyler Long'
@@ -271,7 +271,7 @@ Many-to-many relationship with oneself example
     if __name__ == '__main__':
         db = Database('sqlite://')
         db.create_tables()
-        
+    
         peter = User(name = 'Peter Lau')
         mark = User(name = 'Mark Wong', users_i_follow = [peter, ])
         tyler = User(name = 'Tyler Long', users_i_follow = [peter, ], users_follow_me = [mark, ])
@@ -379,7 +379,7 @@ Performing raw sql query example
     if __name__ == '__main__':
         db = Database('sqlite://')
         db.create_tables()
-        
+    
         count = db.engine.execute('select count(name) from user').scalar()
         print 'There are {0} users in total'.format(count)
 
@@ -407,12 +407,12 @@ Multiple databases example
     
         db2 = Database('sqlite://')
         db2.create_tables()
-        
+    
         user1 = User(name = 'user in db1')
         user2 = User(name = 'user in db2')
         db1.session.add_then_commit(user1)
         db2.session.add_then_commit(user2)
-        
+    
         print 'I am', db1.session.query(User).get(1).name
         print 'I am', db2.session.query(User).get(1).name
 
@@ -498,7 +498,6 @@ MetaBuilder to avoid duplicate code example
     
     class DefaultModel:
         name = Column(String(70))
-        created = Column(DateTime, default = func.now(), nullable = False)
     
     __metaclass__ = Database.MetaBuilder(DefaultModel)
     
@@ -518,8 +517,8 @@ MetaBuilder to avoid duplicate code example
         group = Group(name = 'python')
         db.session.add_then_commit(group)
     
-        print user.name, user.created
-        print group.name, group.created
+        print user.name
+        print group.name
 
 
 |

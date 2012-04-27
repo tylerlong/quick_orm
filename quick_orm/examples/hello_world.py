@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     user = db.session.query(User).get(1)
     print 'My name is', user.name
-    print 'created_at', user.created_at
+    print 'created_at', user.created_at # created_at and updated_at timestamps are added automatically.
     print 'updated_at', user.updated_at
 
     user.name = 'Tyler Long'
