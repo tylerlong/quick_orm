@@ -10,6 +10,4 @@
 
 34. write more comments for the hello world example.
 
-35. timestamp models automatically, like ActiveRecord ?
-
 36.

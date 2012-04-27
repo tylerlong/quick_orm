@@ -17,3 +17,11 @@ if __name__ == '__main__':
 
     user = db.session.query(User).get(1)
     print 'My name is', user.name
+    print 'created_at', user.created_at
+    print 'updated_at', user.updated_at
+
+    user.name = 'Tyler Long'
+    db.session.commit()
+    print 'My name is', user.name
+    print 'created_at', user.created_at
+    print 'updated_at', user.updated_at

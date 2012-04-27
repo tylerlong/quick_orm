@@ -5,11 +5,11 @@
     Core of quick_orm
 """
 from toolkit_library.string_util import StringUtil
-from sqlalchemy import create_engine, Column, Integer, ForeignKey, String
+from sqlalchemy import create_engine, Column, Integer, ForeignKey, String, DateTime, event
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship, backref
 from sqlalchemy.schema import Table
 from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta, _as_declarative
-from extensions import DatabaseExtension, SessionExtension
+from extensions import DatabaseExtension, SessionExtension, ModelExtension
 
 models = list()
 
@@ -32,6 +32,10 @@ class Database(object):
             if '_decl_class_registry' in model.__dict__:
                 continue
             _as_declarative(model, model.__name__, model.__dict__)
+
+            #for auto-update timestamps
+            event.listen(model, 'before_insert', ModelExtension.before_insert_listener)
+            event.listen(model, 'before_update', ModelExtension.before_update_listener)
 
             # for ref grandchildren
             for j in range(i):
@@ -176,6 +180,8 @@ Please specify something like '?charset=utf8' explicitly.""")
 
             attrs['__tablename__'] = StringUtil.camelcase_to_underscore(name)
             attrs['id'] = Column(Integer, primary_key = True)
+            attrs['created_at'] = Column(DateTime)
+            attrs['updated_at'] = Column(DateTime)
             attrs['_readable_name'] = attrs['__tablename__']
             attrs['_readable_names'] =  attrs['_readable_name'] + 's'
             attrs['_one_to_models'] = attrs['_many_to_models'] = []
