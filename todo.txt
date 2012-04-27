@@ -8,6 +8,4 @@
 
 32. one_to_many? (we already have many_to_one, is one_to_many necessary?)
 
-34. write more comments for the hello world example.
-
 36.
