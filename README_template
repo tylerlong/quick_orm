@@ -82,7 +82,7 @@ The source code is hosted on github: https://github.com/tylerlong/quick_orm
 
 Acknowledgements
 ****************
-quick_orm is built upon SQLAlchemy - the famous Python SQL Toolkit and Object Relational Mapper. All of the glory belongs to the SQLAlchemy development team and the SQLAlchemy community! My contribution to Quich ORM becomes trivial compared with theirs( to SQLAlchemy).
+quick_orm is built upon SQLAlchemy - the famous Python SQL Toolkit and Object Relational Mapper. All of the glory belongs to the SQLAlchemy development team and the SQLAlchemy community! My contribution to quick_orm becomes trivial compared with theirs( to SQLAlchemy).
 
 
 |

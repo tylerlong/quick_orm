@@ -22,7 +22,6 @@ class MyDeclarativeMeta(DeclarativeMeta):
 
 @DatabaseExtension.extend # extend Database to add some useful methods
 class Database(object):
-    """Represent a connection to a specific database"""
 
     Base = declarative_base()
 
