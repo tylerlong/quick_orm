@@ -8,6 +8,8 @@
 
 32. one_to_many? (we already have many_to_one, is one_to_many necessary?)
 
-33. add examples for database connection string
+34. write more comments for the hello world example.
 
-34.
+35. timestamp models automatically, like ActiveRecord ?
+
+36.

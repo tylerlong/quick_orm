@@ -179,22 +179,18 @@ Please specify something like '?charset=utf8' explicitly.""")
             attrs['_readable_name'] = attrs['__tablename__']
             attrs['_readable_names'] =  attrs['_readable_name'] + 's'
             attrs['_one_to_models'] = attrs['_many_to_models'] = []
+            if not '__mapper_args__' in attrs:
+                attrs['__mapper_args__'] = {}
 
             # the for loop bellow handles table inheritance
             for base in [base for base in bases if base in models]:
                 if not hasattr(base, 'real_type'):
                     base.real_type = Column('real_type', String(24), nullable = False, index = True)
-                    if hasattr(base, '__mapper_args__'):
-                        base.__mapper_args__['polymorphic_on'] = base.real_type
-                        base.__mapper_args__['polymorphic_identity'] = base._readable_name
-                    else:
-                        base.__mapper_args__ = {'polymorphic_on': base.real_type, 'polymorphic_identity': base._readable_name}
+                    base.__mapper_args__['polymorphic_on'] = base.real_type
+                    base.__mapper_args__['polymorphic_identity'] = base._readable_name
                 attrs['id'] = Column(Integer, ForeignKey('{0}.id'.format(base._readable_name), ondelete = "CASCADE"), primary_key = True)
-                if '__mapper_args__' in attrs:
-                    attrs['__mapper_args__']['polymorphic_identity'] = attrs['_readable_name']
-                    attrs['__mapper_args__']['inherit_condition'] = attrs['id'] == base.id
-                else:
-                    attrs['__mapper_args__'] = {'polymorphic_identity': attrs['_readable_name'], 'inherit_condition': attrs['id'] == base.id}
+                attrs['__mapper_args__']['polymorphic_identity'] = attrs['_readable_name']
+                attrs['__mapper_args__']['inherit_condition'] = attrs['id'] == base.id
 
             return MyDeclarativeMeta.__new__(cls, name, bases, attrs)
 
