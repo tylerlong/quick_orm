@@ -1,5 +1,5 @@
 from quick_orm.core import Database
-from sqlalchemy import Column, String, DateTime, func
+from sqlalchemy import Column, String
 
 class DefaultModel:
     name = Column(String(70))
