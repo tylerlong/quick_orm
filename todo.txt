@@ -6,6 +6,6 @@
 
 30. generate visual charts according to model. It is good for analyzing and demonstrating.
 
-32. one_to_many? (we already have many_to_one, is one_to_many necessary?)
+36. multiple many_to_many between two models
 
-36.
+37.
