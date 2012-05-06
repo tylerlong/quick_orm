@@ -8,7 +8,7 @@ quick_orm
 |
 
 Introduction
-************
+------------
 Python ORM framework which enables you to get started in less than a minute!
 
 Super easy to setup and super easy to use, yet super powerful!
@@ -19,7 +19,7 @@ You would regret that you didn't discorver it earlier!
 |
 
 Features
-********
+--------
 - quick: you could get and play with it in less than a minute. It couldn't be more straightforward.
 - easy: you don't have to write any SQL statements, including those "create table xxx ..." ones.
 - simple: the core code counts only 217 lines including comments and pydocs, there is no room for bugs.
@@ -35,7 +35,7 @@ Features
 |
 
 Quick Start
-***********
+-----------
 
 ::
 
@@ -47,7 +47,7 @@ Refer to the following examples to write your own database manipulation code.
 |
 
 Hello World example
-*******************
+-------------------
 
 ::
 
@@ -83,7 +83,7 @@ Hello World example
 |
 
 Many-to-one relationship example
-********************************
+--------------------------------
 
 ::
 
@@ -118,7 +118,7 @@ Many-to-one relationship example
 |
 
 Many-to-one relationship options example
-****************************************
+----------------------------------------
 
 ::
 
@@ -153,7 +153,7 @@ Many-to-one relationship options example
 |
 
 Many-to-one relationship with oneself example
-*********************************************
+---------------------------------------------
 
 ::
 
@@ -185,7 +185,7 @@ Many-to-one relationship with oneself example
 |
 
 Many-to-many relationship example
-*********************************
+---------------------------------
 
 ::
 
@@ -219,7 +219,7 @@ Many-to-many relationship example
 |
 
 Many-to-many relationship options example
-*****************************************
+-----------------------------------------
 
 ::
 
@@ -253,7 +253,7 @@ Many-to-many relationship options example
 |
 
 Many-to-many relationship with oneself example
-**********************************************
+----------------------------------------------
 
 ::
 
@@ -287,7 +287,7 @@ Many-to-many relationship with oneself example
 |
 
 One-to-one relationship example
-*******************************
+-------------------------------
 
 ::
 
@@ -323,7 +323,7 @@ One-to-one relationship example
 |
 
 Multiple many-to-one relationships example
-******************************************
+------------------------------------------
 
 ::
 
@@ -362,7 +362,7 @@ Multiple many-to-one relationships example
 |
 
 Performing raw sql query example
-********************************
+--------------------------------
 
 ::
 
@@ -387,7 +387,7 @@ Performing raw sql query example
 |
 
 Multiple databases example
-**************************
+--------------------------
 
 ::
 
@@ -420,7 +420,7 @@ Multiple databases example
 |
 
 Table inheritance example
-*************************
+-------------------------
 
 ::
 
@@ -489,7 +489,7 @@ Table inheritance example
 |
 
 MetaBuilder to avoid duplicate code example
-*******************************************
+-------------------------------------------
 
 ::
 
@@ -524,7 +524,7 @@ MetaBuilder to avoid duplicate code example
 |
 
 Examples from real life
-***********************
+-----------------------
 - Everblog_ is a personal blogging platform taking advantage of evernote, it chooses quick_orm as its ORM framework. Refer to `everblog's database model file`_ for more detail.
 
 .. _Everblog: https://github.com/tylerlong/everblog
@@ -536,7 +536,7 @@ If you know any other successful stories about quick_orm, do tell me and I will 
 |
 
 Where to learn more about quick_orm?
-************************************
+------------------------------------
 As said above, quick_orm is built upon SQLAlchemy. quick_orm never tries to hide SQLAlchemy's flexibility and power. Everything availiable in SQLAlchemy is still available in quick_orm.
 
 So please read the documents of SQLAlchemy, you would learn much more there than you could here.
@@ -547,7 +547,7 @@ Read quick_orm's source code, try to improve it.
 |
 
 You wanna involve?
-******************
+------------------
 quick_orm is released under BSD lisence.
 
 The source code is hosted on github: https://github.com/tylerlong/quick_orm
@@ -556,14 +556,29 @@ The source code is hosted on github: https://github.com/tylerlong/quick_orm
 |
 
 Acknowledgements
-****************
+----------------
 quick_orm is built upon SQLAlchemy - the famous Python SQL Toolkit and Object Relational Mapper. All of the glory belongs to the SQLAlchemy development team and the SQLAlchemy community! My contribution to quick_orm becomes trivial compared with theirs( to SQLAlchemy).
 
 
 |
 
 Feedback
-********
+--------
 Comments, suggestions, questions, free beer, t-shirts, kindles, ipads ... are all welcome!
 
 Email: quick.orm.feedback@gmail.com
+
+
+|
+
+todo list
+---------
+1. full text search. (class decorator for model?)
+
+#. orm for nosql? such as this one: http://qslack.com/projects/rhino-a-ruby-hbase-orm/
+
+#. ref_grandchildren can't access some attributes of grandchildren. for example: everblog project: tag.blog_entrys.lang report an error.
+
+#. generate visual charts according to model. It is good for analyzing and demonstrating.
+
+#. multiple many_to_many between two models
