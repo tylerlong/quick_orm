@@ -1,8 +1,6 @@
 quick_orm
 =========
-
-
-**News**: quick_orm is fully compatible with the newest SQLAlchemy 0.7.7.
+**News**: quick_orm is fully compatible with the newest SQLAlchemy 0.7.8.
 
 
 |
@@ -98,12 +96,8 @@ Email: quick.orm.feedback@gmail.com
 
 todo list
 ---------
-1. full text search. (class decorator for model?)
-
+#. full text search. (class decorator for model?)
 #. orm for nosql? such as this one: http://qslack.com/projects/rhino-a-ruby-hbase-orm/
-
 #. ref_grandchildren can't access some attributes of grandchildren. for example: everblog project: tag.blog_entrys.lang report an error.
-
 #. generate visual charts according to model. It is good for analyzing and demonstrating.
-
 #. multiple many_to_many between two models
