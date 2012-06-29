@@ -12,6 +12,7 @@ examples_list = [
     'multiple_databases',
     'table_inheritance',
     'meta_builder',
+    'model_for_stackoverflow',
 ]
 
 examples_dict = {
@@ -28,4 +29,5 @@ examples_dict = {
     'multiple_databases': 'Multiple databases',
     'table_inheritance': 'Table inheritance',
     'meta_builder': 'MetaBuilder to avoid duplicate code',
+    'model_for_stackoverflow': 'Model for stackoverflow.com',
 }
