@@ -567,9 +567,7 @@ Model for stackoverflow.com example
     
     Database.register()
     
-    
     if __name__ == '__main__':
-    
         db = Database('sqlite://')
         db.create_tables()
     
@@ -595,10 +593,9 @@ Model for stackoverflow.com example
         question1.tags = [tag1,]
         answer2.tags = [tag2,]
     
-        vote1 = Vote(type = 'vote_up', post = question1)
-        vote2 = Vote(type = 'vote_up', post = question1)
-        vote3 = Vote(type = 'vote_down', post = question1)
-    
+        vote1 = Vote(user = user1, type = 'vote_up', post = question1)
+        vote2 = Vote(user = user2, type = 'vote_up', post = question1)
+        vote2 = Vote(user = user2, type = 'vote_down', post = question2)
     
         db.session.add_all_then_commit([user1, user2,])
     
