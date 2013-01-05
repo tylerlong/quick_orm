@@ -1,7 +1,7 @@
 quick_orm
 =========
-**News**: quick_orm is fully compatible with the newest SQLAlchemy 0.7.9.
-**Notice**: quick_orm is NOT YET compatible with SQLAlchemy 0.8.x.
+- **News**: quick_orm is fully compatible with the newest SQLAlchemy 0.7.9.
+- **Notice**: quick_orm is NOT YET compatible with SQLAlchemy 0.8.x.
 
 
 |
