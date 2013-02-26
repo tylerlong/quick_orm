@@ -53,7 +53,7 @@ class Database(object):
                             if getattr(self, parent._readable_name).real_type == model._readable_name else None))(parent, model))
         models[:] = []
 
-    def __init__(self, connection_string):
+    def __init__(self, connection_string, **kwargs):
         """Initiate a database engine which is very low level, and a database session which deals with orm."""
 
         # Solve an issue with mysql character encoding(maybe it's a bug of MySQLdb)
@@ -62,7 +62,7 @@ class Database(object):
             raise ValueError("""No charset was specified for a mysql connection string.
 Please specify something like '?charset=utf8' explicitly.""")
 
-        self.engine = create_engine(connection_string, convert_unicode = True, encoding = 'utf-8')
+        self.engine = create_engine(connection_string, convert_unicode = True, encoding = 'utf-8', **kwargs)
         self.session = SessionExtension.extend(scoped_session(sessionmaker(autocommit = False, autoflush = False, bind = self.engine)))
 
     @staticmethod
